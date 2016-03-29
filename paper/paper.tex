@@ -1,5 +1,6 @@
+% vim: set spell spelllang=en tw=100 et sw=4 sts=4 :
+
 \def\year{2016}\relax
-%File: formatting-instruction.tex
 \documentclass[letterpaper]{article}
 \usepackage{aaai16}
 \usepackage{times}
@@ -9,11 +10,10 @@
 \usepackage{cleveref}
 \usepackage{complexity}
 \usepackage[ruled,vlined]{algorithm2e} % algorithms
-\usepackage{longtable}
 \usepackage{booktabs}                  % less ugly tables
 \usepackage{tikz}                      % For pretty pictures
 \usepackage{afterpage}
-\usepackage{siunitx}
+\usepackage[tight-spacing=true]{siunitx}
 \usepackage{tikz}                      % For pretty pictures
 \usepackage{gnuplot-lua-tikz}          % graphs
 
@@ -30,8 +30,13 @@ decorations.pathreplacing, patterns, tikzmark, fit}
 \newcommand{\mcline}[1]{line~\ref{line:mc:#1}}
 \newcommand{\mclinerange}[2]{lines~\ref{line:mc:#1} to~\ref{line:mc:#2}}
 
+% cref style
 \crefname{algocf}{algorithm}{algorithm}
 \Crefname{algocf}{Algorithm}{Algorithms}
+\crefname{figure}{figure}{figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{table}{tables}
+\Crefname{table}{Table}{Tables}
 
 % common names of things
 \newcommand{\Cbest}{C^\star}
@@ -97,6 +102,14 @@ decorations.pathreplacing, patterns, tikzmark, fit}
   \fi
 }}{}
 \makeatother
+
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.8}
+\renewcommand{\dbltopfraction}{0.9}
+\renewcommand{\textfraction}{0.05}
+\setcounter{dbltopnumber}{2}
+\renewcommand{\floatpagefraction}{0.85}
+\renewcommand{\dblfloatpagefraction}{0.85}
 
 % \frenchspacing
 \setlength{\pdfpagewidth}{8.5in}
@@ -246,7 +259,7 @@ bounded breadth-first search: we refer to Chang et al.\ \cite{Chang:2013} for ho
 quickly in practice. Now it is easy to see that maximum cliques in $G^k$ correspond with maximum
 $k$-cliques in $G$ \cite{Balasundaram:2005}.
 
-\begin{algorithm}\DontPrintSemicolon
+\begin{algorithm}[t]\DontPrintSemicolon
     \begin{tikzpicture}[remember picture,overlay]
         \coordinate (cvrej1c) at ($(pic cs:cvrej1) + (0, 0.15)$);
         \coordinate (cvrej2c) at ($(pic cs:cvrej2) + (0, 0.00)$);
@@ -269,12 +282,12 @@ $k$-cliques in $G$ \cite{Balasundaram:2005}.
     \nl $\FuncSty{maxKClique}$ :: (Graph $G$, Integer $k$) $\rightarrow$ Vertex Set \;
     \nl \Begin{
         \nl $G$ $\gets$ $G^k$ \mclabel{power} \;
-        \nl permute $G$ so that vertices are in non-increasing degree order \mclabel{permute} \;
+        \nl permute $G$ into non-increasing degree order \mclabel{permute} \;
         \nl $\KwSty{global}$ $\Cbest$ $\gets$ $\emptyset$ \mclabel{cbest} \;
         \nl $\expand$($\emptyset$, $\vertexset(G)$) \mclabel{c} \mclabel{p} \;
         \nl $\KwSty{return}$ $\Cbest$ (unpermuted) \;
     }
-    \;
+    \vspace{0.5ex}
 
     \nl $\expand$ :: (Vertex Set $C$, Vertex Set $P$) \;
     \nl \Begin{
@@ -287,17 +300,16 @@ $k$-cliques in $G$ \cite{Balasundaram:2005}.
             }
             \nl $v$ $\gets$ $\order[i]$ \mclabel{v} \;
             \nl \tikzmark{cvinp1}\If{$v$ $\in$ $P$\tikzmark{cvinp2}\mclabel{alreadyrejected}}{
-                \nl $C$ $\gets$ $C + v$ \mclabel{vinstart} \;
-                \nl \lIf{\textnormal{$|C| > |\Cbest|$}}{$\Cbest$ $\gets$ $C$\mclabel{unseat}}
+                \nl $C'$ $\gets$ $C + v$ \mclabel{vinstart} \;
+                \nl \lIf{\textnormal{$|C'| > |\Cbest|$}}{$\Cbest$ $\gets$ $C'$\mclabel{unseat}}
                 \nl $P'$ $\gets$ $P$ $\cap$ $\neighbourhood_G(v)$ \mclabel{pprime} \;
-                \nl \lIf{$P'$ $\ne$ $\emptyset$}{$\expand$($C$, $P'$)\mclabel{vinend}\mclabel{recurse}}
-                \nl \tikzmark{creject1}$C$ $\gets$ $C - v$ \mclabel{vnotinstart} \;
-                \nl $P$ $\gets$ $P - v$\tikzmark{creject2} \mclabel{vnotinend} \;
+                \nl \lIf{$P'$ $\ne$ $\emptyset$}{$\expand$($C'$, $P'$)\mclabel{vinend}\mclabel{recurse}}
+                \nl $P$ $\gets$ $P - v$\tikzmark{creject2} \mclabel{vnotin} \;
             }
             \nl \tikzmark{cvrejg1}$\vrej$ $\gets$ $v$ \tikzmark{cvrejg2} \mclabel{vrej} \;
         }
     }
-    \;
+    \vspace{0.5ex}
 
     \nl $\colourOrder$ :: (Vertex Set $P$) $\rightarrow$ (Vertex Array, Int Array) \;
     \nl \Begin{
@@ -317,7 +329,7 @@ $k$-cliques in $G$ \cite{Balasundaram:2005}.
         }
         \nl $\KwSty{return}$ ($\order$, $\bounds$) \;
     }
-    \;
+    \vspace{0.5ex}
 
     \nl $\dominated$ :: (Vertex $v$) $\rightarrow$ Vertex Set \;
     \nl \Begin{
@@ -444,7 +456,7 @@ $C$ (\mclinerange{vinstart}{vinend}): we create a new $P'$ from $P$ (\mcline{ppr
 rejecting vertices which are not adjacent to $v$ (and thus every vertex in $P'$ is adjacent to
 \emph{every} vertex in $C$). If vertices remain in $P'$, we recurse (\mcline{recurse}). We then take
 the opposite branch choice, and consider rejecting from $P$ and $C$
-(\mclinerange{vnotinstart}{vnotinend}). We then loop, and pick a new $v$.
+(\mcline{vnotin}). We then loop, and pick a new $v$.
 
 \paragraph{Integrating the colour bound}
 
@@ -478,10 +490,10 @@ clique containing $w$ cannot reduce the amount by which the clique may be grown.
 
 Suppose a graph does contain one or more pairs of dominating vertices. We could make use of this
 fact during search in at least two ways. Firstly, when accepting a vertex $w$, we may also
-unconditionally accept any vertex $v$ which dominates $w$. Secondly, when rejecting a vertex $v$, we
-may also unconditionally reject any vertex $w$ which is dominated by $v$.  We could also choose to
-calculate domination globally (i.e.\ with respect to $G^k$, or even the original $G$), or locally
-(i.e.\ with respect to the subgraph of $G^k$ induced by $C \cup P$).
+unconditionally accept any vertex $v$ which both dominates and is adjacent to $w$. Secondly, when
+rejecting a vertex $v$, we may also unconditionally reject any vertex $w$ which is dominated by $v$.
+We could also choose to calculate domination globally (i.e.\ with respect to $G^k$, or even the
+original $G$), or locally (i.e.\ with respect to the subgraph of $G^k$ induced by $C \cup P$).
 
 Detecting whether one vertex dominates another may be done in linear time (we discuss this further
 below), but finding all vertices dominated by a particular vertex is quadratic, and finding all
@@ -508,7 +520,7 @@ without branching.
 The lines marked in blue in \cref{algorithm:maxKClique} show how this is done. When a vertex $\vrej$
 is rejected, we remove from $P$ any vertex that is dominated (with respect to $G^k$) by $\vrej$.
 This is \mcline{dominated}; the set of dominated vertices calculated here should be cached.  One
-might expect that this calculation would appear after \mcline{vnotinend}. However, this introduces a
+might expect that this calculation would appear after \mcline{vnotin}. However, this introduces a
 cost if the bound allows the next choice of $v$ to be eliminated. Thus we simply remember that we
 have rejected $v$ by storing it in $\vrej$ (\mcline{vrej}), and lazily postpone the filtering until
 after the bound has been checked.
@@ -544,68 +556,35 @@ We begin with a selection of real-world and standard benchmark graphs. We look a
 and 4 in every case---this is a standard practice for the $k$-club problem
 \cite{Chang:2013,Wotzlaw:2014}.
 
-\afterpage{
-    {
-    \onecolumn
-\setlength{\LTcapwidth}{\textwidth}
-\centering
-\begin{longtable}{l c r rrr rrr}
-    \caption{Experimental results for a range of graphs. For each graph, we consider $k$ equal to 2,
-        3 and 4. In each case we show the density of $G^k$, and then for both the unmodified
-        algorithm and the algorithm with our lazy global domination step, we give the size of a
-        maximum $k$-clique, the number of nodes required, and the runtime in seconds. Some results
-        were aborted after one day.}
-    \label{table:results}
-    \\
-
-    \toprule
-
-    & & & \multicolumn{3}{c}{Unmodified} & \multicolumn{3}{c}{With Domination} \\
-    \cmidrule(lr){4-6}
-    \cmidrule(lr){7-9}
-    Instance & \multicolumn{1}{c}{$k$} & \multicolumn{1}{c}{$D$} &
-    \multicolumn{1}{c}{$\tilde{\omega}_k$} & \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
-    \multicolumn{1}{c}{$\tilde{\omega}_k$} & \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
-    \midrule
-
-    \endfirsthead
-
-    \caption[]{(continued from previous page)} \\
-    \toprule
-
-    & & & \multicolumn{3}{c}{Unmodified} & \multicolumn{3}{c}{With Domination} \\
-    \cmidrule(lr){4-6}
-    \cmidrule(lr){7-9}
-    Instance & \multicolumn{1}{c}{$k$} & \multicolumn{1}{c}{$D$} &
-    \multicolumn{1}{c}{$\tilde{\omega}_k$} & \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
-    \multicolumn{1}{c}{$\tilde{\omega}_k$} & \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
-    \midrule
-
-    \endhead
-
-    \midrule
-    \endfoot
-
-    \bottomrule
-    \endlastfoot
-
-    \inputhaxx{gen-table-erdos}
-    \midrule
-    \inputhaxx{gen-table-dimacs}
-    \midrule
-    \inputhaxx{gen-table-dimacs10walshaw}
-    \midrule
-    \inputhaxx{gen-table-dimacs10cluster}
-\end{longtable}}\twocolumn}
-
 \paragraph{Erd\H{o}s collaboration graphs}
 
-In the first part of \cref{table:results} we present experimental results from Erd\H{o}s
+In \cref{table:erdos} we present experimental results from Erd\H{o}s
 collaboration graphs from the Pajek dataset by Vladimir Batagelj and Andrej
-Mrvar\footnote{\texttt{http://vlado.fmf.uni-lj.si/pub/networks/data/}}.  We were able to solve all of
+Mrvar\footnote{http://vlado.fmf.uni-lj.si/pub/networks/data/}.  We were able to solve all of
 these problems in under eight minutes (and all but three in under two seconds) when using the
 domination rule. However, using the unmodified maximum clique algorithm, two of these results did
 not finish running within one day. Note that for $k = 4$, a $k$-clique covers all of ``Erdos02''.
+
+\begin{table}
+    \tiny
+    \begin{tabular}{l c rr rr rr}
+        \toprule
+        & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
+    \cmidrule(lr){5-6}
+    \cmidrule(lr){7-8}
+    Instance & \multicolumn{1}{c}{$k$} & \multicolumn{1}{c}{$D$} & \multicolumn{1}{c}{$\tilde{\omega}_k$} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
+    \midrule
+    \inputhaxx{gen-table-erdos}
+    \bottomrule
+\end{tabular}
+\caption{Experimental results for Erd\H{o}s collaboration graphs. For each
+graph, we consider $k$ equal to 2, 3 and 4. In each case we show the density of
+$G^k$, the size of a maximum $k$-clique, and then for both the unmodified
+algorithm and the algorithm with our lazy global domination step, the number of
+nodes required, and the runtime in seconds.}\label{table:erdos}
+\end{table}
 
 In several cases, the algorithm found and proved an optimal solution immediately ($\tilde{\omega}_k$
 is equal to the number of search nodes). This illustrates the necessity of laziness: if we simply
@@ -621,12 +600,33 @@ algorithmically and computationally.
 
 \paragraph{Clique graphs}
 
-In the second part of \cref{table:results} we present results from the ``clique'' graphs from the
-Second DIMACS implementation challenge\footnote{\texttt{http://dimacs.rutgers.edu/Challenges/}}. These
+In \cref{table:clique} we present results from the ``clique'' graphs from the
+Second DIMACS implementation challenge\footnote{http://dimacs.rutgers.edu/Challenges/}. These
 graphs were designed to test maximum clique implementations. Nearly all of these graphs have
 diameter 2, so a 2-clique covers the entire graph---we have ignored these. The only exceptions are
 the ``c-fat'' family (all of which are trivial for a maximum clique solver), and one of the
 ``p\_hat'' graphs.
+
+\begin{table}
+    \tiny
+    \begin{tabular}{l c rr rr rr}
+        \toprule
+        & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
+    \cmidrule(lr){5-6}
+    \cmidrule(lr){7-8}
+    Instance & \multicolumn{1}{c}{$k$} & \multicolumn{1}{c}{$D$} & \multicolumn{1}{c}{$\tilde{\omega}_k$} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
+    \midrule
+    \inputhaxx{gen-table-dimacs}
+    \bottomrule
+\end{tabular}
+\caption{Experimental results for DIMACS clique graphs with diameter greater
+    than two. For each graph, we consider $k$ equal to 2, 3 and 4. In each case
+    we show the density of $G^k$, the size of a maximum $k$-clique, and then
+    for both the unmodified algorithm and the algorithm with our lazy global
+domination step, the number of nodes required, and the runtime in seconds.}\label{table:clique}
+\end{table}
 
 With the domination rule, we solve all of these problems within a tenth of a second. Without, two of
 the results take over a day, and the rest remain trivial. Note that in several cases, for some
@@ -637,13 +637,34 @@ numbers are the same for each value of $k$ (Chang et al.\ did not investigate ``
 
 \paragraph{Partitioning graphs}
 
-The third part of \cref{table:results} presents results from the smallest 20 partitioning graphs
+\Cref{table:partitioning} presents results from the smallest 20 partitioning graphs
 from the 10th DIMACS Implementation
-Challenge\footnote{\texttt{http://staffweb.cms.gre.ac.uk/~wc06/partition/}}.  Many of these graphs are
+Challenge\footnote{http://staffweb.cms.gre.ac.uk/\textasciitilde{}wc06/partition/}.  Many of these graphs are
 considerably larger than those typically considered for the maximum clique problem, and we might
 expect our $O(|V|^2)$ memory requirements to cause problems. Nonetheless, with the domination rule
 there is only one instance which we were unable to solve within a day (and without the domination
 rule, there are two).
+
+\begin{table}
+    \tiny\setlength{\tabcolsep}{4pt}
+    \begin{tabular}{l c rr rr rr}
+        \toprule
+        & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
+    \cmidrule(lr){5-6}
+    \cmidrule(lr){7-8}
+    Instance & \multicolumn{1}{c}{$k$} & \multicolumn{1}{c}{$D$} & \multicolumn{1}{c}{$\tilde{\omega}_k$} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
+    \midrule
+    \inputhaxx{gen-table-dimacs10walshaw}
+    \bottomrule
+\end{tabular}
+\caption{Experimental results for the smaller DIMACS partitioning graphs. For
+    each graph, we consider $k$ equal to 2, 3 and 4. In each case we show the
+    density of $G^k$, the size of a maximum $k$-clique, and then for both the
+    unmodified algorithm and the algorithm with our lazy global domination
+step, the number of nodes required, and the runtime in seconds.}\label{table:partitioning}
+\end{table}
 
 On the other hand, we sometimes see a significant cost where the domination rule does not help, and
 where the proof of optimality is not immediate: in ``3elt'' and ``4elt'', our runtimes can nearly
@@ -654,15 +675,35 @@ Five of these graphs were considered for the $k$-club problem by Wotzlaw \cite{W
 five cases, the $k$-clique and $k$-club numbers are the same for $k$ equal to 2, 3 and 4. However,
 the $k$-clique number was again consistently much easier to find.
 
-
 \paragraph{Clustering graphs}
 
-The final part of \cref{table:results} presents results from the smallest 20 partitioning graphs
+\Cref{table:clustering} presents results from the smallest 20 clustering graphs
 from the 10th DIMACS Implementation
-Challenge\footnote{\texttt{http://www.cc.gatech.edu/dimacs10/archive/clustering.shtml}}. Again, from a
+Challenge\footnote{http://www.cc.gatech.edu/dimacs10/archive/clustering.shtml}. Again, from a
 maximum clique perspective these would be considered unusually large graphs. However, only five were
 unsolvable within a day (plus a sixth when the domination rule was not used), and half of the
 problems took under two seconds.
+
+\begin{table}
+    \tiny\setlength{\tabcolsep}{4pt}
+    \begin{tabular}{l c rr rr rr}
+        \toprule
+        & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
+    \cmidrule(lr){5-6}
+    \cmidrule(lr){7-8}
+    Instance & \multicolumn{1}{c}{$k$} & \multicolumn{1}{c}{$D$} & \multicolumn{1}{c}{$\tilde{\omega}_k$} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
+    \midrule
+    \inputhaxx{gen-table-dimacs10cluster}
+    \bottomrule
+\end{tabular}
+\caption{Experimental results for the smaller DIMACS clustering graphs. For
+    each graph, we consider $k$ equal to 2, 3 and 4. In each case we show the
+    density of $G^k$, the size of a maximum $k$-clique, and then for both the
+    unmodified algorithm and the algorithm with our lazy global domination
+step, the number of nodes required, and the runtime in seconds.}\label{table:clustering}
+\end{table}
 
 Seven of these graphs were considered for the $k$-club problem by Wotzlaw \cite{Wotzlaw:2014}. In
 these cases, the $2$-clique and $2$-club numbers are the same, except for ``football'' where the
