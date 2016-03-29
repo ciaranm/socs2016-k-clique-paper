@@ -153,15 +153,18 @@ decorations.pathreplacing, patterns, tikzmark, fit}
 \section{Introduction}
 
 A clique in a graph is a set of vertices, each of which is adjacent to every other vertex in the
-set. Finding a clique of maximum size in a graph is one of the basic \NP-hard
-problems \cite{Garey:1990}; applications include geometry, coding theory, computer vision and
-bioinformatics \cite{Bomze:1999,Butenko:2006}. However, when analysing real-world data, a clique may
-be too strong a requirement. A $k$-clique (or sometimes $n$-clique or $s$-clique) is a relaxed form
-of clique, where instead of requiring each pair of vertices to be directly adjacent, we only require
-that they be connected by a path of length at most $k$ \cite{Luce:1950}. Thus a $1$-clique \emph{is} a
-clique, a $2$-clique may be thought of as ``a group of people, all of whom either know each other or
-have a mutual acquaintance'', and so on. We illustrate this in \cref{figure:k-cliques}.
-Determining the size of a maximum $k$-clique is \NP-hard for any fixed $k$ \cite{Bourjolly:2002}.
+set. Finding a clique of maximum size in a graph is one of the basic \NP-hard problems
+\cite{Garey:1990}; applications include geometry, coding theory, computer vision and bioinformatics
+\cite{Bomze:1999,Butenko:2006}. However, when analysing real-world data, a clique may be too strong
+a requirement. A $k$-clique (or sometimes $n$-clique or $s$-clique) is a relaxed form of clique,
+where instead of requiring each pair of vertices to be directly adjacent, we only require that they
+be connected by a path of length at most $k$ \cite{Luce:1950} \footnote{In an unfortunate clash of
+notation, the name ``$k$-clique problem'' is sometimes used elsewhere to refer the decision version
+of the clique problem, to distinguish it from the maximum clique problem.}.  Thus a $1$-clique
+\emph{is} a clique, a $2$-clique may be thought of as ``a group of people, all of whom either know
+each other or have a mutual acquaintance'', and so on. We illustrate this in
+\cref{figure:k-cliques}.  Determining the size of a maximum $k$-clique is \NP-hard for any fixed $k$
+\cite{Bourjolly:2002}.
 
 A related relaxation is a $k$-club, which tightens the requirement of a $k$-clique as follows
 \cite{Mokken:1979}. In a $k$-clique, each pair of vertices is connected by a path of length at most
