@@ -13,32 +13,36 @@
 \usepackage{booktabs}                  % less ugly tables
 \usepackage{tikz}                      % For pretty pictures
 \usepackage{afterpage}
+\usepackage{siunitx}
+\usepackage{tikz}                      % For pretty pictures
+\usepackage{gnuplot-lua-tikz}          % graphs
+
+% \usepackage{showframe}
 
 \usetikzlibrary{arrows, shadows, calc, positioning, decorations, decorations.pathmorphing,
 decorations.pathreplacing, patterns, tikzmark, fit}
+
+% \input isn't expandable. yay.
+\makeatletter\newcommand*\inputhaxx[1]{\@@input #1}\makeatother
 
 % labels in algorithms
 \newcommand{\mclabel}[1]{\label{line:mc:#1}}
 \newcommand{\mcline}[1]{line~\ref{line:mc:#1}}
 \newcommand{\mclinerange}[2]{lines~\ref{line:mc:#1} to~\ref{line:mc:#2}}
 
-\frenchspacing
-\setlength{\pdfpagewidth}{8.5in}
-\setlength{\pdfpageheight}{11in}
-\pdfinfo{
-/Title (Finding Maximum $k$-Cliques Faster using Lazy Global Domination)
-/Author (Ciaran McCreesh, Patrick Prosser)}
-\setcounter{secnumdepth}{0}
+\crefname{algocf}{algorithm}{algorithm}
+\Crefname{algocf}{Algorithm}{Algorithms}
 
 % common names of things
 \newcommand{\Cbest}{C^\star}
 \newcommand{\bounds}{\mathit{bounds}}
 \newcommand{\order}{\mathit{order}}
-\newcommand{\colour}{\mathit{colour}}
+\newcommand{\colour}{\mathit{currentColour}}
 \newcommand{\uncoloured}{\mathit{uncoloured}}
 \newcommand{\colourable}{\mathit{colourable}}
 \newcommand{\expand}{\FuncSty{expand}}
-\newcommand{\colourOrder}{\FuncSty{colourOrder}}
+\newcommand{\dominated}{\FuncSty{dominated}}
+\newcommand{\colourOrder}{\FuncSty{colour}}
 \newcommand{\vrej}{v_{\mathit{rej}}}
 \newcommand{\kwunset}{\KwSty{unset}}
 \newcommand{\vertexset}{V}
@@ -56,10 +60,53 @@ decorations.pathreplacing, patterns, tikzmark, fit}
 \definecolor{safenearlywhite}{rgb}{0.9, 0.9, 0.9}
 \definecolor{safelightgrey}{rgb}{0.7, 0.7, 0.7}
 
+% drawing styles
+\tikzset{vertex/.style={draw, circle, inner sep=0pt, minimum size=0.4cm, font=\small}}
+\tikzset{notvertex/.style={vertex, color=white, text=black}}
+\tikzset{plainvertex/.style={vertex}}
+\tikzset{selectedvertex/.style={vertex, fill=safedarkblue}}
+\tikzset{delvertex/.style={vertex, dotted, color=safelightgrey}}
+\tikzset{vertexc1/.style={vertex, fill=safelightblue}}
+\tikzset{vertexc2/.style={vertex, fill=safedarkblue, text=safenearlywhite}}
+\tikzset{vertexc3/.style={vertex, fill=safelightorange}}
+\tikzset{vertexc4/.style={vertex, fill=safedarkorange, text=safenearlywhite}}
+
+\tikzset{edge/.style={color=safelightgrey}}
+\tikzset{bedge/.style={very thick}}
+\tikzset{deledge/.style={dotted, color=safelightgrey}}
+\tikzset{edgel1/.style={color=safeverydarkblue}}
+\tikzset{edgel2/.style={color=safemediumorange}}
+\tikzset{edgel3/.style={very thick, color=safedarkblue}}
+\tikzset{edgel4/.style={very thick, color=safelightorange}}
+
+\tikzset{processarrow/.style={->, very thick, decorate, decoration={snake, post length=0.5mm}}}
+\tikzset{brace/.style={decorate, decoration={brace}, very thick}}
+\tikzset{label/.style={font=\small}}
+
+\makeatletter\@ifpackageloaded{showframe}{
+    % show lines down the middle columns too
+    % http://tex.stackexchange.com/questions/16199/test-if-a-package-or-package-option-is-loaded
+\newlength\Fcolumnseprule\setlength\Fcolumnseprule{0.4pt}\def\@outputdblcol{%
+  \if@firstcolumn\global \@firstcolumnfalse \global \setbox\@leftcolumn \box\@outputbox
+  \else
+    \global \@firstcolumntrue
+    \setbox\@outputbox \vbox{\hb@xt@\textwidth{\hb@xt@\columnwidth{\box\@leftcolumn \hss}%
+    \vrule \@width\Fcolumnseprule\hfil{\normalcolor\vrule \@width\columnseprule}
+    \hfil\vrule \@width\Fcolumnseprule\hb@xt@\columnwidth {\box\@outputbox \hss}}}\@combinedblfloats\@outputpage
+    \begingroup\@dblfloatplacement\@startdblcolumn\@whilesw\if@fcolmade \fi{\@outputpage\@startdblcolumn}\endgroup
+  \fi
+}}{}
+\makeatother
+
+% \frenchspacing
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+\pdfinfo{
+/Title (Finding Maximum $k$-Cliques Faster using Lazy Global Domination)
+/Author (Ciaran McCreesh, Patrick Prosser)}
+\setcounter{secnumdepth}{0}
+
 \begin{document}
-% The file aaai.sty is the style file for AAAI Press
-% proceedings, working notes, and technical reports.
-%
 \title{Finding Maximum $k$-Cliques Faster using Lazy Global Domination}
 \author{
     Ciaran McCreesh%
@@ -69,6 +116,7 @@ decorations.pathreplacing, patterns, tikzmark, fit}
     \\ University of Glasgow, Glasgow, Scotland
 }
 \maketitle
+
 \begin{abstract}
     A clique in a graph is a set of vertices, each of which is adjacent to every other vertex in
     this set. A $k$-clique relaxes this requirement, requiring vertices to be within a distance $k$
@@ -80,21 +128,6 @@ decorations.pathreplacing, patterns, tikzmark, fit}
 \end{abstract}
 
 \section{Introduction}
-
-\begin{figure}[b] % first page please
-    \centering
-    \begin{tikzpicture}
-        % \input{figure-k-clique-1}
-    \end{tikzpicture}\hspace{4em}\begin{tikzpicture}
-        % \input{figure-k-clique-2}
-    \end{tikzpicture}
-
-    \caption{On the left, a graph, with its unique maximum clique $\{1, 2, 5, 8\}$ of size 4
-        highlighted. On the right, the same graph, with a maximum $2$-clique $\{1, 2, 3, 4, 5, 6, 8\}$
-        of size 7 highlighted. This is not a $2$-club, since the only path of length 2 between vertices 3 and 6
-        goes through vertex 7. A $3$-clique covers the entire graph.}
-    \label{figure:k-cliques}
-\end{figure}
 
 A clique in a graph is a set of vertices, each of which is adjacent to every other vertex in the
 set. Finding a clique of maximum size in a graph is one of the basic \NP-hard
@@ -113,6 +146,65 @@ $k$, but that path may use any vertices in the original graph. In a $k$-club, ea
 must be connected by a path of length at most $k$ using only vertices that are also in the club.
 Thus the $2$-clique in \cref{figure:k-cliques} is \emph{not} a $2$-club (obviously, every $k$-club
 is a $k$-clique).
+
+\begin{figure}[b!] % first page please
+    \centering
+    \begin{tikzpicture}[scale=0.8]
+        \newcount \c
+        \foreach \n in {1, ..., 8}{
+            \c=\n \advance\c by -1 \multiply\c by -360 \divide\c by 8 \advance\c by 90 \advance\c by 22.5
+            \ifthenelse{\n = 1 \OR \n = 2 \OR \n = 5 \OR \n = 8}{
+                \node[selectedvertex] (N\n) at (\the\c:1.2) {\n};
+            }{
+                \node[plainvertex] (N\n) at (\the\c:1.2) {\n};
+            }
+        }
+
+        \draw [edge] (N2) -- (N3);
+        \draw [edge] (N2) -- (N4);
+        \draw [edge] (N3) -- (N7);
+        \draw [edge] (N4) -- (N5);
+        \draw [edge] (N5) -- (N6);
+        \draw [edge] (N6) -- (N7);
+
+        \draw [bedge] (N1) -- (N2);
+        \draw [bedge] (N1) -- (N5);
+        \draw [bedge] (N1) -- (N8);
+        \draw [bedge] (N2) -- (N5);
+        \draw [bedge] (N2) -- (N8);
+        \draw [bedge] (N5) -- (N8);
+    \end{tikzpicture}\hspace{3em}\begin{tikzpicture}[scale=0.8]
+        \newcount \c
+        \foreach \n in {1, ..., 8}{
+            \c=\n \advance\c by -1 \multiply\c by -360 \divide\c by 8 \advance\c by 90 \advance\c by 22.5
+            \ifthenelse{\n = 1 \OR \n = 2 \OR \n = 3 \OR \n = 4 \OR \n = 5 \OR \n = 6 \OR \n = 8}{
+                \node[selectedvertex] (N\n) at (\the\c:1.2) {\n};
+            }{
+                \node[plainvertex] (N\n) at (\the\c:1.2) {\n};
+            }
+        }
+
+        \draw [edge] (N3) -- (N7);
+        \draw [edge] (N6) -- (N7);
+
+        \draw [bedge] (N1) -- (N2);
+        \draw [bedge] (N1) -- (N5);
+        \draw [bedge] (N1) -- (N8);
+        \draw [bedge] (N2) -- (N5);
+        \draw [bedge] (N2) -- (N8);
+        \draw [bedge] (N5) -- (N8);
+        \draw [bedge] (N2) -- (N3);
+        \draw [bedge] (N2) -- (N4);
+        \draw [bedge] (N4) -- (N5);
+        \draw [bedge] (N5) -- (N6);
+    \end{tikzpicture}
+
+    \caption{On the left, a graph, with its unique maximum clique $\{1, 2, 5, 8\}$ of size 4
+        highlighted. On the right, the same graph, with a maximum $2$-clique $\{1, 2, 3, 4, 5, 6, 8\}$
+        of size 7 highlighted. This is not a $2$-club, since the only path of length 2 between vertices 3 and 6
+        goes through vertex 7. A $3$-clique covers the entire graph.}
+    \label{figure:k-cliques}
+\end{figure}
 
 A recent survey by Shahinpour and Butenko discusses algorithms and results for $k$-clique and
 $k$-club problems \cite{Shahinpour:2013}.  We adopt their notation of $\tilde{\omega}_k$ for the
@@ -174,7 +266,7 @@ $k$-cliques in $G$ \cite{Balasundaram:2005}.
 
     \end{tikzpicture}
 
-    \nl $\FuncSty{maximumKClique}$ :: (Graph $G$, Integer $k$) $\rightarrow$ Vertex Set \;
+    \nl $\FuncSty{maxKClique}$ :: (Graph $G$, Integer $k$) $\rightarrow$ Vertex Set \;
     \nl \Begin{
         \nl $G$ $\gets$ $G^k$ \mclabel{power} \;
         \nl permute $G$ so that vertices are in non-increasing degree order \mclabel{permute} \;
@@ -191,9 +283,7 @@ $k$-cliques in $G$ \cite{Balasundaram:2005}.
         \nl \For{$i$ $\gets$ $|P|$ $\KwSty{downto}$ 1\mclabel{righttoleft}}{
             \nl \lIf{\textnormal{$|C|$ + $\bounds[i]$ $\le$ $|\Cbest|$}\mclabel{bound}}{$\KwSty{return}$}
             \nl \tikzmark{cdom1}\If{\textnormal{$\vrej$ $\ne$ $\kwunset$}}{
-                \nl $P$ $\gets$ $P$ $\setminus$ $\{ w \in \vertexset(G) :
-                \neighbourhood_G(w) - \vrej \subseteq \neighbourhood_G(\vrej) - w \}$
-                \tikzmark{cdom2} \mclabel{dominated} \;
+                \nl $P$ $\gets$ $P$ $\setminus$ $\dominated(\vrej)$ \tikzmark{cdom2} \mclabel{dominated} \;
             }
             \nl $v$ $\gets$ $\order[i]$ \mclabel{v} \;
             \nl \tikzmark{cvinp1}\If{$v$ $\in$ $P$\tikzmark{cvinp2}\mclabel{alreadyrejected}}{
@@ -227,8 +317,13 @@ $k$-cliques in $G$ \cite{Balasundaram:2005}.
         }
         \nl $\KwSty{return}$ ($\order$, $\bounds$) \;
     }
+    \;
 
-    \caption{An algorithm for the maximum $k$-clique problem.}
+    \nl $\dominated$ :: (Vertex $v$) $\rightarrow$ Vertex Set \;
+    \nl \Begin{
+        \nl $\KwSty{return}$ $\{ w \in \vertexset(G) : \neighbourhood_G(w) - v \subseteq \neighbourhood_G(v) - w \} $\;
+    }
+    \caption{Solving the maximum $k$-clique problem.}
     \label{algorithm:maxKClique}
 \end{algorithm}
 
@@ -257,15 +352,73 @@ the first $i$ vertices of $\order$ using $\bounds[i]$ colours.
 
 \begin{figure}[b]
     \centering
-    \begin{tikzpicture}
-        % \input{figure-colour}
+    \begin{tikzpicture}[scale=0.8]
+\newcount \c
+\foreach \n in {1, ..., 8}{
+    \c=\n \advance\c by -1 \multiply\c by -360 \divide\c by 8 \advance\c by 90 \advance\c by 22.5
+    \ifthenelse{\n = 1 \OR \n = 3 \OR \n = 4 \OR \n = 6}{
+        \node[vertexc1] (N\n) at (\the\c:1.2) {\n};
+    }{}
+    \ifthenelse{\n = 2 \OR \n = 7}{
+        \node[vertexc2] (N\n) at (\the\c:1.2) {\n};
+    }{}
+    \ifthenelse{\n = 5}{
+        \node[vertexc3] (N\n) at (\the\c:1.2) {\n};
+    }{}
+    \ifthenelse{\n = 8}{
+        \node[vertexc4] (N\n) at (\the\c:1.2) {\n};
+    }{}
+}
+
+\draw [edge] (N2) -- (N3);
+\draw [edge] (N2) -- (N4);
+\draw [edge] (N3) -- (N7);
+\draw [edge] (N4) -- (N5);
+\draw [edge] (N5) -- (N6);
+\draw [edge] (N6) -- (N7);
+\draw [edge] (N1) -- (N2);
+\draw [edge] (N1) -- (N5);
+\draw [edge] (N1) -- (N8);
+\draw [edge] (N2) -- (N5);
+\draw [edge] (N2) -- (N8);
+\draw [edge] (N5) -- (N8);
+
+\draw [processarrow] (1.6, 0) -> (2.7, 0);
+
+\coordinate (Ms) at (3.0, 0.35);
+\node[right = 0.0 of Ms, vertexc1] (M1) {1};
+\node[right = 0.2 of M1, vertexc1] (M2) {3};
+\node[right = 0.2 of M2, vertexc1] (M3) {4};
+\node[right = 0.2 of M3, vertexc1] (M4) {6};
+\node[right = 0.2 of M4, vertexc2] (M5) {2};
+\node[right = 0.2 of M5, vertexc2] (M6) {7};
+\node[right = 0.2 of M6, vertexc3] (M7) {5};
+\node[right = 0.2 of M7, vertexc4] (M8) {8};
+
+\draw[brace] ($(M1.north west)+(0.0,0.3)$) -- ($(M8.north east)+(0.0,0.3)$);
+\node[anchor=south, label] at ($(M1)!0.5!(M8)$)[yshift=0.7cm] { Vertices in colour order };
+
+\coordinate (Bs) at (3.0, -0.35);
+\node[right = 0.0 of Bs, notvertex] (B1) {1};
+\node[right = 0.2 of B1, notvertex] (B2) {1};
+\node[right = 0.2 of B2, notvertex] (B3) {1};
+\node[right = 0.2 of B3, notvertex] (B4) {1};
+\node[right = 0.2 of B4, notvertex] (B5) {2};
+\node[right = 0.2 of B5, notvertex] (B6) {2};
+\node[right = 0.2 of B6, notvertex] (B7) {3};
+\node[right = 0.2 of B7, notvertex] (B8) {4};
+
+\draw[brace] ($(B8.south east)+(0.0,-0.2)$) -- ($(B1.south west)+(0.0,-0.2)$);
+\node[anchor=north, label] at ($(B1)!0.5!(B8)$)[yshift=-0.6cm] { Number of colours used };
     \end{tikzpicture}
 
-    \caption{The graph on the left has been coloured greedily, using four colours: vertices 1, 3, 4
-        then 6 were given the first colour, then vertices 2 then 7 were given the second colour,
-        then vertex 5 was given the third colour, and vertex 8 the fourth colour. The $\order$ array
-        contains the vertices in the order they were coloured; the $i$th entry of the $\bounds$ array
-        contains the number of colours used to colour the first $i$ vertices of $\order$.}
+    \caption{The graph on the left has been coloured greedily, using four
+        colours: vertices 1, 3, 4 then 6 were given the first colour, then
+        vertices 2 then 7 were given the second colour, then vertex 5 was given
+        the third colour, and vertex 8 the fourth colour. The $\order$ array,
+        on top, contains the vertices in the order they were coloured; the
+        $i$th entry of the $\bounds$ array, below, contains the number of colours
+        used to colour the first $i$ vertices of $\order$.}
     \label{figure:colours}
 \end{figure}
 
@@ -436,13 +589,13 @@ and 4 in every case---this is a standard practice for the $k$-club problem
     \bottomrule
     \endlastfoot
 
-    % \inputhaxx{gen-table-erdos}
+    \inputhaxx{gen-table-erdos}
     \midrule
-    % \inputhaxx{gen-table-dimacs}
+    \inputhaxx{gen-table-dimacs}
     \midrule
-    % \inputhaxx{gen-table-dimacs10walshaw}
+    \inputhaxx{gen-table-dimacs10walshaw}
     \midrule
-    % \inputhaxx{gen-table-dimacs10cluster}
+    \inputhaxx{gen-table-dimacs10cluster}
 \end{longtable}}\twocolumn}
 
 \paragraph{Erd\H{o}s collaboration graphs}
@@ -541,18 +694,18 @@ which is in turn much smaller than it is for $k = 2$. The peak also occurs for l
 probabilities as $k$ increases. For contrast, for the maximum clique problem, the peak occurs at
 around edge probability 0.9, and is two orders of magnitude larger.
 
-\begin{figure}[p] % these two on the same page please
+\begin{figure}[t]
     \centering
-    % \input{gen-graph-omega}
+    \input{gen-graph-omega}
     \caption{Values of $\tilde{\omega}_k$ for random graphs $G(200, p)$, with varying edge probabilities.
-        We see that even for very low edge probabilities, a
-    maximum $k$-clique quickly covers the entire graph. This is in contrast to maximum cliques, which remain
-    small even at much higher edge probabilities.}
+        We see that even for very low edge probabilities, a maximum $k$-clique
+    quickly covers the entire graph when $k > 1$.}
     \label{figure:graph-omega}
+\end{figure}
 
-    \vspace{1.5em}
-
-    % \input{gen-graph-nodes}
+\begin{figure}[t]
+    \centering
+    \input{gen-graph-nodes}
     \caption{Search space size for random graphs $G(200, p)^k$, with varying edge probabilities. We see that
         $4$-clique is easier than $3$-clique in practice, which in turn is easier than $2$-clique. (The
         complexity peak for maximum clique occurs at around edge probability 0.9, and requires
@@ -564,17 +717,18 @@ In \cref{figure:graph-omega-2,figure:graph-nodes-2} we show the effect of
 changing $n$ and fixing $k = 2$. As $n$ increases from 50 to 200, the complexity peak becomes much
 more pronounced, and shifts slightly towards the left (lower edge probabilities).
 
-\begin{figure}[p] % these two on the same page please
+\begin{figure}[t]
     \centering
-    % \input{gen-graph-omega-2}
+    \input{gen-graph-omega-2}
     \caption{The size of a maximum $2$-clique in random graphs $G(n, p)$ with varying edge
         probabilities, and different values of $n$. For $G(50, p)$, a $2$-clique has size average 50
     from $p = 0.42$ onwards.}
     \label{figure:graph-omega-2}
+\end{figure}
 
-    \vspace{1.5em}
-
-    % \input{gen-graph-nodes-2}
+\begin{figure}[t]
+    \centering
+    \input{gen-graph-nodes-2}
     \caption{The search space size for the maximum $2$-clique problem in random graphs $G(n, p)$
         with varying edge probabilities, and for different values of $n$. As $n$ increases, the
     complexity peak grows and moves slowly to the left.}

@@ -3,13 +3,17 @@ all : tables graphs
 
 TABLES =
 
-GRAPHS =
-
 tables : $(TABLES)
+
+GRAPHS = \
+	gen-graph-nodes-2.tex \
+	gen-graph-nodes.tex \
+	gen-graph-omega-2.tex \
+	gen-graph-omega.tex
 
 graphs : $(GRAPHS)
 
 gen-graph-%.tex : graph-%.gnuplot
 	gnuplot $<
-	sed -i -e '5s/^\(\\path.*\)/\% \1/' $@ # epic haxx
+	sed -i -e '4,5s/^\(\\path.*\)/\% \1/' $@ # epic haxx
 
