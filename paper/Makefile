@@ -6,10 +6,10 @@ TABLES = gen-table-erdos.tex gen-table-dimacs10cluster.tex gen-table-dimacs10wal
 tables : $(TABLES)
 
 gen-table-erdos.tex : make-table-graphs.bash erdos.list
-	bash ./make-table-graphs.bash erdos.list ~/phd/datasets/graph/pajek/ net > $@
+	bash ./make-table.bash erdos.list net > $@
 
-gen-table-dimacs.tex : make-table-graphs.bash dimacs.list
-	bash ./make-table-graphs.bash dimacs.list ~/phd/datasets/graph/dimacs/ dimacs > $@
+gen-table-dimacs.tex : make-table.bash dimacs.list
+	bash ./make-table.bash dimacs.list dimacs > $@
 
 gen-table-dimacs10%.tex : make-table-graphs.bash dimacs10%.list
 	bash ./make-table-graphs.bash dimacs10$*.list ~/phd/datasets/graph/dimacs10/ metis > $@
