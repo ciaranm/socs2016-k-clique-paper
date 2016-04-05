@@ -28,7 +28,7 @@ hep-th ../instances/hep-th.graph metis
 jazz ../instances/jazz.graph metis
 karate ../instances/karate.graph metis
 lesmis ../instances/lesmis.graph metis
-metisscience ../instances/netscience.graph net
+netscience ../instances/netscience.graph metis
 PGPgiantcompo ../instances/PGPgiantcompo.graph metis
 polblogs ../instances/polblogs.graph metis
 polbooks ../instances/polbooks.graph metis
