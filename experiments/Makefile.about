@@ -1,0 +1,22 @@
+SHELL := /bin/bash
+INSTANCES := $(shell cut -d' ' -f1 instances.txt)
+TIMEOUT := 3600
+ALGORITHMS := about
+POWERS := 2 3 4
+STACK_SPACE := 10485760
+RESULTS := results
+
+all : $(foreach i, $(INSTANCES), $(foreach a, $(ALGORITHMS), $(foreach p, $(POWERS), $(RESULTS)/$(a)-$(p)/$i.out )))
+
+dir-% :
+	mkdir -p $(RESULTS) $(RESULTS)/$*
+
+$(RESULTS)/about-2/%.out : | dir-about-2
+	ulimit -s $(STACK_SPACE) ; ../code/about_graph $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f2 ) --format $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f3 ) --power 2 > >(tee $@ )
+
+$(RESULTS)/about-3/%.out : | dir-about-3
+	ulimit -s $(STACK_SPACE) ; ../code/about_graph $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f2 ) --format $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f3 ) --power 3 > >(tee $@ )
+
+$(RESULTS)/about-4/%.out : | dir-about-4
+	ulimit -s $(STACK_SPACE) ; ../code/about_graph $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f2 ) --format $(shell grep "^`basename $*` " < instances.txt | cut -d' ' -f3 ) --power 4 > >(tee $@ )
+

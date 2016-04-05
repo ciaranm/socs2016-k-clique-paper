@@ -6,6 +6,7 @@ FORMAT=$2
 
 RESULTS_ccon=../experiments/results/sequential
 RESULTS_cconlgd=../experiments/results/sequential-lgd
+RESULTS_about=../experiments/results/about
 
 cat $1 | while read filename name ; do
 
@@ -24,7 +25,7 @@ cat $1 | while read filename name ; do
 
         # density
         echo "&"
-        read v e x <<<$(../code/about_graph --format $FORMAT ../instances/$filename --power ${power} )
+        read v e x <<<$(<${RESULTS_about}-${power}/$name.about)
         ruby -e "printf('%.2f', (2.0 * $e) / ($v * ($v - 1.0)))"
 
         # omega
