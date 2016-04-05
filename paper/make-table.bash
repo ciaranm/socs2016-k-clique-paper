@@ -25,7 +25,7 @@ cat $1 | while read filename name ; do
 
         # density
         echo "&"
-        read v e x <<<$(<${RESULTS_about}-${power}/$name.about)
+        read v e x <<<$(<${RESULTS_about}-${power}/$name.out)
         ruby -e "printf('%.2f', (2.0 * $e) / ($v * ($v - 1.0)))"
 
         # omega

@@ -557,11 +557,11 @@ testing whether the result is empty; the set difference is again a bitwise ``and
 \section{Experimental Results}
 
 Here we give experimental results on a range of standard benchmarks, and on real-world and random
-graphs. Where timing results are reported, the experiments were run on a machine with Intel E5645
-processors, and single-threaded runtimes are given. The time taken to read in the graph from a file
-is excluded, but preprocessing time (including the construction of $G^k$ and the bitset encoding) is
-included. We use the term \emph{nodes} to refer to the number of recursive calls made by the
-branch-and-bound part of the algorithm.
+graphs. Where timing results are reported, the experiments were run on a machine with Intel E5-2687W
+v3 processors, and single-threaded runtimes are given. The time taken to read in the graph from a
+file is excluded, but preprocessing time (including the construction of $G^k$ and the bitset
+encoding) is included. We use the term \emph{nodes} to refer to the number of recursive calls made
+by the branch-and-bound part of the algorithm.
 
 \subsection{Real-World Graphs}
 
@@ -576,7 +576,7 @@ collaboration graphs from the Pajek dataset by Vladimir Batagelj and Andrej
 Mrvar\footnote{http://vlado.fmf.uni-lj.si/pub/networks/data/}.  We were able to solve all of
 these problems in under eight minutes (and all but three in under two seconds) when using the
 domination rule. However, using the unmodified maximum clique algorithm, two of these results did
-not finish running within one day. Note that for $k = 4$, a $k$-clique covers all of ``Erdos02''.
+not finish running within one hour. Note that for $k = 4$, a $k$-clique covers all of ``Erdos02''.
 
 \begin{table}
     \tiny
@@ -642,7 +642,7 @@ domination step, the number of nodes required, and the runtime in seconds.}\labe
 \end{table}
 
 With the domination rule, we solve all of these problems within a tenth of a second. Without, two of
-the results take over a day, and the rest remain trivial. Note that in several cases, for some
+the results take over an hour, and the rest remain trivial. Note that in several cases, for some
 values of $k$ a $k$-clique covers the entire graph.  Again using Chang et al.'s results
 \cite{Chang:2013}, we see that for the first six graphs in this table the $k$-clique and $k$-club
 numbers are the same for each value of $k$ (Chang et al.\ did not investigate ``c-fat500-10'' or
@@ -655,7 +655,7 @@ from the 10th DIMACS Implementation
 Challenge\footnote{http://staffweb.cms.gre.ac.uk/\textasciitilde{}wc06/partition/}.  Many of these graphs are
 considerably larger than those typically considered for the maximum clique problem, and we might
 expect our $O(|V|^2)$ memory requirements to cause problems. Nonetheless, with the domination rule
-there is only one instance which we were unable to solve within a day (and without the domination
+there is only one instance which we were unable to solve within an hour (and without the domination
 rule, there are two).
 
 \begin{table}
@@ -694,7 +694,7 @@ the $k$-clique number was again consistently much easier to find.
 from the 10th DIMACS Implementation
 Challenge\footnote{http://www.cc.gatech.edu/dimacs10/archive/clustering.shtml}. Again, from a
 maximum clique perspective these would be considered unusually large graphs. However, only five were
-unsolvable within a day (plus a sixth when the domination rule was not used), and half of the
+unsolvable within an hour (plus a sixth when the domination rule was not used), and half of the
 problems took under two seconds.
 
 \begin{table}
