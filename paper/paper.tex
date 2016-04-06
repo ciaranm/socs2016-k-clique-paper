@@ -149,7 +149,7 @@ decorations.pathreplacing, patterns, tikzmark, fit}
     the art maximum clique algorithm to show that this reduction is in fact useful in practice, and
     introduce a lazy global domination rule which sometimes vastly reduces the search space. We
     include experimental results for a range of real-world and benchmark graphs, and a detailed look
-    at random graphs.
+    at random graphs. We also use thread-parallel search to solve some harder instances.
 \end{abstract}
 
 \section{Introduction}
@@ -559,11 +559,13 @@ testing whether the result is empty; the set difference is again a bitwise ``and
 
 Here we give experimental results on a range of standard benchmarks, and on real-world and random
 graphs. Where timing results are reported, the experiments were run on a machine with dual Intel
-E5-2687W v3 processors; single-threaded runtimes are given, except in \cref{table:parallel}, where
-20 threads were used (our machine does not have hyper-threading enabled). The time taken to read in
-the graph from a file is excluded, but preprocessing time (including the construction of $G^k$ and
-the bitset encoding) is included. We use the term \emph{nodes} to refer to the number of recursive
-calls made by the branch-and-bound part of the algorithm.
+E5-2687W v3 processors and 256GBytes RAM; single-threaded runtimes are given, except in
+\cref{table:parallel}, where 20 threads were used (our machine does not have hyper-threading
+enabled). Our software was implemented in C++, using C++11 native threads, and was compiled using
+GCC 5.1.0. The time taken to read in the graph from a file is excluded, but preprocessing time
+(including the construction of $G^k$ and the bitset encoding) is included. We use the term
+\emph{nodes} to refer to the number of recursive calls made by the branch-and-bound part of the
+algorithm.
 
 \subsection{Real-World Graphs}
 
@@ -581,7 +583,8 @@ domination rule. However, using the unmodified maximum clique algorithm, two of 
 not finish running within one hour. Note that for $k = 4$, a $k$-clique covers all of ``Erdos02''.
 
 \begin{table}
-    \tiny
+    \tiny\setlength{\tabcolsep}{6pt} % carefully tuned!
+    \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
         & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
@@ -623,7 +626,8 @@ the ``c-fat'' family (all of which are trivial for a maximum clique solver), and
 ``p\_hat'' graphs.
 
 \begin{table}
-    \tiny
+    \tiny\setlength{\tabcolsep}{6pt} % carefully tuned!
+    \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
         & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
@@ -661,7 +665,8 @@ there is only one instance which we were unable to solve within an hour (and wit
 rule, there are two).
 
 \begin{table}
-    \tiny\setlength{\tabcolsep}{4pt}
+    \tiny\setlength{\tabcolsep}{4pt} % carefully tuned!
+    \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
         & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
@@ -700,7 +705,8 @@ unsolvable within an hour (plus a sixth when the domination rule was not used), 
 problems took under two seconds.
 
 \begin{table}
-    \tiny\setlength{\tabcolsep}{4pt}
+    \tiny\setlength{\tabcolsep}{5pt} % carefully tuned!
+    \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
         & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
@@ -734,7 +740,8 @@ imply that the $k$-clique and $k$-club numbers necessarily differ, since solutio
 \subsection{Parallel Search}
 
 \begin{table}
-    \tiny\setlength{\tabcolsep}{4pt}
+    \tiny\setlength{\tabcolsep}{4.6pt} % carefully tuned!
+    \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
         & & & & \multicolumn{2}{c}{Sequential} & \multicolumn{2}{c}{Parallel} \\
