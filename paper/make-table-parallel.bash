@@ -2,13 +2,14 @@
 # vim: set sw=4 sts=4 et :
 
 LIST=$1
-FORMAT=$2
 
-RESULTS_ccon=../experiments/results/sequential
 RESULTS_cconlgd=../experiments/results/sequential-lgd
+RESULTS_tcconlgd=../experiments/results/parallel-lgd
 RESULTS_about=../experiments/results/about
 
-cat $1 | while read filename name ; do
+cat $1 | while read filename name FORMAT ; do
+
+echo format is $FORMAT 1>&2
 
     for power in 2 3 4 ; do
         if [[ $power == 2 ]] ; then
@@ -30,14 +31,14 @@ cat $1 | while read filename name ; do
 
         # omega
         echo "&"
-        FILE=${RESULTS_cconlgd}-${power}/$name.out
+        FILE=${RESULTS_tcconlgd}-${power}/$name.out
         if grep -q aborted $FILE ; then
             echo '${\ge}'$(head -n1 $FILE | cut -d' ' -f1)'$'
         else
             head -n1 $FILE | cut -d' ' -f1
         fi
 
-        for method in "ccon" "cconlgd" ; do
+        for method in "cconlgd" "tcconlgd" ; do
             resultsdir=RESULTS_$method
             FILE=${!resultsdir}-${power}/$name.out
 

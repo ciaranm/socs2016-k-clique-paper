@@ -144,10 +144,12 @@ decorations.pathreplacing, patterns, tikzmark, fit}
     A clique in a graph is a set of vertices, each of which is adjacent to every other vertex in
     this set. A $k$-clique relaxes this requirement, requiring vertices to be within a distance $k$
     of each other, rather than directly adjacent. In theory, a maximum clique algorithm can easily
-    be adapted to solve the maximum $k$-clique problem. We use a state of the art maximum clique
-    algorithm to show that this is feasible in practice, and introduce a lazy global domination rule
-    which sometimes vastly reduces the search space. We include experimental results for a range of
-    real-world and benchmark graphs, and a detailed look at random graphs.
+    be adapted to solve the maximum $k$-clique problem, although large sparse $k$-clique graphs
+    reduce to large dense clique graphs, which can be computationally challenging. We adapt a state of
+    the art maximum clique algorithm to show that this reduction is in fact useful in practice, and
+    introduce a lazy global domination rule which sometimes vastly reduces the search space. We
+    include experimental results for a range of real-world and benchmark graphs, and a detailed look
+    at random graphs.
 \end{abstract}
 
 \section{Introduction}
@@ -156,15 +158,14 @@ A clique in a graph is a set of vertices, each of which is adjacent to every oth
 set. Finding a clique of maximum size in a graph is one of the basic \NP-hard problems
 \cite{Garey:1990}; applications include geometry, coding theory, computer vision and bioinformatics
 \cite{Bomze:1999,Butenko:2006}. However, when analysing real-world data, a clique may be too strong
-a requirement. A $k$-clique (or sometimes $n$-clique or $s$-clique) is a relaxed form of clique,
-where instead of requiring each pair of vertices to be directly adjacent, we only require that they
-be connected by a path of length at most $k$ \cite{Luce:1950} \footnote{In an unfortunate clash of
-notation, the name ``$k$-clique problem'' is sometimes used elsewhere to refer the decision version
-of the clique problem, to distinguish it from the maximum clique problem.}.  Thus a $1$-clique
-\emph{is} a clique, a $2$-clique may be thought of as ``a group of people, all of whom either know
-each other or have a mutual acquaintance'', and so on. We illustrate this in
-\cref{figure:k-cliques}.  Determining the size of a maximum $k$-clique is \NP-hard for any fixed $k$
-\cite{Bourjolly:2002}.
+a requirement. A $k$-clique\footnote{Or sometimes $n$-clique or $s$-clique; in an unfortunate clash
+of notation, ``$k$-clique problem'' is sometimes used elsewhere for the decision version of the
+clique problem, to distinguish it from the maximum clique problem.} is a relaxed form of clique,
+where instead of requiring each pair of vertices to be directly adjacent, we only require they be
+connected by a path of length at most $k$ \cite{Luce:1950}.  Thus a $1$-clique \emph{is} a clique, a
+$2$-clique may be thought of as ``a group of people, all of whom either know each other or have a
+mutual acquaintance'', and so on. We illustrate this in \cref{figure:k-cliques}.  Determining the
+size of a maximum $k$-clique is \NP-hard for any fixed $k$ \cite{Bourjolly:2002}.
 
 A related relaxation is a $k$-club, which tightens the requirement of a $k$-clique as follows
 \cite{Mokken:1979}. In a $k$-clique, each pair of vertices is connected by a path of length at most
@@ -557,11 +558,12 @@ testing whether the result is empty; the set difference is again a bitwise ``and
 \section{Experimental Results}
 
 Here we give experimental results on a range of standard benchmarks, and on real-world and random
-graphs. Where timing results are reported, the experiments were run on a machine with Intel E5-2687W
-v3 processors, and single-threaded runtimes are given. The time taken to read in the graph from a
-file is excluded, but preprocessing time (including the construction of $G^k$ and the bitset
-encoding) is included. We use the term \emph{nodes} to refer to the number of recursive calls made
-by the branch-and-bound part of the algorithm.
+graphs. Where timing results are reported, the experiments were run on a machine with dual Intel
+E5-2687W v3 processors; single-threaded runtimes are given, except in \cref{table:parallel}, where
+20 threads were used (our machine does not have hyper-threading enabled). The time taken to read in
+the graph from a file is excluded, but preprocessing time (including the construction of $G^k$ and
+the bitset encoding) is included. We use the term \emph{nodes} to refer to the number of recursive
+calls made by the branch-and-bound part of the algorithm.
 
 \subsection{Real-World Graphs}
 
@@ -728,6 +730,30 @@ $k$-clique and $k$-club numbers are the same, which suggests a potential improve
 algorithms: first solve the maximum $k$-clique problem instead, and test whether the result found is
 a $k$-club, before embarking upon a more complicated search. (Note that a negative result does not
 imply that the $k$-clique and $k$-club numbers necessarily differ, since solutions are not unique.)
+
+\subsection{Parallel Search}
+
+\begin{table}
+    \tiny\setlength{\tabcolsep}{4pt}
+    \begin{tabular}{l c rr rr rr}
+        \toprule
+        & & & & \multicolumn{2}{c}{Sequential} & \multicolumn{2}{c}{Parallel} \\
+    \cmidrule(lr){5-6}
+    \cmidrule(lr){7-8}
+    Instance & \multicolumn{1}{c}{$k$} & \multicolumn{1}{c}{$D$} & \multicolumn{1}{c}{$\tilde{\omega}_k$} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
+    \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
+    \midrule
+    \inputhaxx{gen-table-parallel}
+    \bottomrule
+\end{tabular}
+\caption{Experimental results for multi-threaded search on harder instances, using 20 threads. For
+    each graph, we consider $k$ equal to 2, 3 and 4. In each case we show the
+    density of $G^k$, the size of a maximum $k$-clique, and then for both the
+    sequential algorithm and the parallel algorithm (with lazy global domination in both cases),
+    the number of nodes required, and the runtime in seconds.}\label{table:parallel}
+\end{table}
+
 
 \subsection{Random Graphs}
 
