@@ -2,6 +2,7 @@
 
 #include "graph.hh"
 #include "sequential.hh"
+#include "parallel.hh"
 #include "file_formats.hh"
 #include "power.hh"
 
@@ -107,6 +108,7 @@ auto main(int argc, char * argv[]) -> int
             ("power",              po::value<int>(), "Raise the graph to this power (to solve s-clique)")
             ("format",             po::value<std::string>(), "Specify the format of the input")
             ("lgd",                                  "Use lazy global domination")
+            ("parallel-search",                      "Use threaded search")
             ;
 
         po::options_description all_options{ "All options" };
@@ -181,7 +183,7 @@ auto main(int argc, char * argv[]) -> int
 
             /* Do the actual run. */
             bool aborted = false;
-            auto result = run_with_modifications(cco_max_clique)(
+            auto result = run_with_modifications(options_vars.count("parallel-search") ? tcco_max_clique : cco_max_clique)(
                         graph,
                         params,
                         aborted,

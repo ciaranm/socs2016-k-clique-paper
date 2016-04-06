@@ -29,6 +29,11 @@ struct MaxCliqueResult
      * Additional values are for each worker thread.
      */
     std::list<std::chrono::milliseconds> times;
+
+    /**
+     * Merge two results together (add nodes, etc). Used by threads.
+     */
+    auto merge(const MaxCliqueResult &) -> void;
 };
 
 #endif

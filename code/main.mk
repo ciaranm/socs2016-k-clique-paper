@@ -11,6 +11,7 @@ TARGET := libclique.a
 
 SOURCES := \
     sequential.cc \
+    parallel.cc \
     bit_graph.cc \
     graph.cc \
     degree_sort.cc \
@@ -19,7 +20,8 @@ SOURCES := \
     metis.cc \
     power.cc \
     graph_file_error.cc \
-    kneighbours.cc
+    kneighbours.cc \
+    max_clique_result.cc
 
 TGT_LDLIBS := $(boost_ldlibs)
 
