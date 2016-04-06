@@ -1,0 +1,6 @@
+astro-ph ../instances/astro-ph.graph metis
+cond-mat ../instances/cond-mat.graph metis
+cond-mat-2003 ../instances/cond-mat-2003.graph metis
+cond-mat-2005 ../instances/cond-mat-2005.graph metis
+vibrobox ../instances/vibrobox.graph metis
+wing-nodal ../instances/wing_nodal.graph metis
