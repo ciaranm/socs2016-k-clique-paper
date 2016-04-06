@@ -7,19 +7,17 @@ RESULTS_cconlgd=../experiments/results/sequential-lgd
 RESULTS_tcconlgd=../experiments/results/parallel-lgd
 RESULTS_about=../experiments/results/about
 
-cat $1 | while read filename name FORMAT ; do
-
-echo format is $FORMAT 1>&2
+cat $1 | while read filename name format ; do
 
     for power in 2 3 4 ; do
         if [[ $power == 2 ]] ; then
             echo $name
         elif [[ $power == 3 ]] ; then
             # |V|
-            echo '\hspace*{0.5em}\color{gray}$|V|{=}'$(../code/about_graph --format $FORMAT ../instances/$filename | cut -d' ' -f1)'$'
+            echo '\hspace*{0.5em}\color{gray}$|V|{=}'$(../code/about_graph --format $format ../instances/$filename | cut -d' ' -f1)'$'
         elif [[ $power == 4 ]] ; then
             # |E|
-            echo '\hspace*{0.5em}\color{gray}$|E|{=}'$(../code/about_graph --format $FORMAT ../instances/$filename | cut -d' ' -f2)'$'
+            echo '\hspace*{0.5em}\color{gray}$|E|{=}'$(../code/about_graph --format $format ../instances/$filename | cut -d' ' -f2)'$'
         fi
 
         echo "& $power"
