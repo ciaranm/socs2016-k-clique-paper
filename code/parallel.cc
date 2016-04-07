@@ -199,6 +199,8 @@ namespace
 
             // for each v in p... (v comes later)
             for (int n = p.popcount() - 1 ; n >= 0 ; --n) {
+                ++position.back();
+
                 // bound, timeout or early exit?
                 unsigned best_anywhere_value = get_best_anywhere_value();
                 if (c.size() + colours[n] <= best_anywhere_value || params.abort->load())
