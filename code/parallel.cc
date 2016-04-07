@@ -203,8 +203,10 @@ namespace
 
                 // bound, timeout or early exit?
                 unsigned best_anywhere_value = get_best_anywhere_value();
-                if (c.size() + colours[n] <= best_anywhere_value || params.abort->load())
+                if (c.size() + colours[n] <= best_anywhere_value || params.abort->load()) {
+                    // kill_queue_items_to_the_right_of(position);
                     return;
+                }
 
                 if (params.lgd && -1 != previous_v)
                     propagate_lazy_global_domination(previous_v, p);
@@ -342,10 +344,16 @@ namespace
                                             stole.pop_back();
                                             for (auto & s : stole)
                                                 --s;
+
+                                            // queues[depth]->enqueue_range(QueueItem{ Subproblem{ stole } }, graph.size());
+
                                             while (++stole.back() < graph.size())
                                                 queues[depth]->enqueue(QueueItem{ Subproblem{ stole } });
                                         }
                                     }
+
+                                    // queues[depth]->sort();
+
                                     queues[depth]->initial_producer_done();
                                 }
 
