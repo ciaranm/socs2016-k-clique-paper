@@ -393,7 +393,7 @@ namespace
             // snoop thread
             std::thread snoop_thread([&] {
                     while (! finished) {
-                        auto abort_time = std::chrono::steady_clock::now() + std::chrono::seconds(1);
+                        auto abort_time = std::chrono::steady_clock::now() + std::chrono::seconds(60);
                         std::unique_lock<std::mutex> guard(snoop_mutex);
                         if (std::cv_status::timeout == snoop_cv.wait_until(guard, abort_time) && snoops_changed) {
                             snoops_changed = false;
