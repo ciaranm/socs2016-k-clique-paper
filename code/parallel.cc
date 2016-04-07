@@ -21,7 +21,7 @@ using std::chrono::duration_cast;
 
 namespace
 {
-    const constexpr int number_of_depths = 6;
+    const constexpr int number_of_depths = 8;
     const constexpr int number_of_steal_points = number_of_depths - 1;
 
     struct Subproblem
@@ -320,7 +320,7 @@ namespace
             std::mutex snoop_mutex;
             std::condition_variable snoop_cv;
             bool snoops_changed = false, finished = false;
-            std::vector<Subproblem> snoops(std::thread::hardware_concurrency());
+            std::vector<std::pair<Subproblem, bool> > snoops(std::thread::hardware_concurrency());
 
             /* workers */
             for (unsigned i = 0 ; i < std::thread::hardware_concurrency() ; ++i) {
@@ -367,13 +367,19 @@ namespace
 
                                     {
                                         std::unique_lock<std::mutex> guard(snoop_mutex);
-                                        snoops.at(i) = args.subproblem;
+                                        snoops.at(i) = { args.subproblem, true };
                                         snoops_changed = true;
                                     }
 
                                     // do some work
                                     expand(c, p, initial_p_order, initial_colours, position, local_result,
                                             &args.subproblem, &thread_steal_points.at(i));
+
+                                    {
+                                        std::unique_lock<std::mutex> guard(snoop_mutex);
+                                        snoops.at(i) = { args.subproblem, false };
+                                        snoops_changed = true;
+                                    }
 
                                     // record the last time we finished doing useful stuff
                                     overall_time = duration_cast<milliseconds>(steady_clock::now() - start_time);
@@ -385,7 +391,7 @@ namespace
 
                             {
                                 std::unique_lock<std::mutex> guard(snoop_mutex);
-                                snoops.at(i).offsets = { -1 };
+                                snoops.at(i) = { { { -1 } }, false };
                                 snoops_changed = true;
                             }
 
@@ -401,19 +407,26 @@ namespace
             // snoop thread
             std::thread snoop_thread([&] {
                     while (! finished) {
+                        auto old_bound_value = get_best_anywhere_value();
                         auto abort_time = std::chrono::steady_clock::now() + std::chrono::seconds(60);
                         std::unique_lock<std::mutex> guard(snoop_mutex);
-                        if (std::cv_status::timeout == snoop_cv.wait_until(guard, abort_time) && snoops_changed) {
-                            snoops_changed = false;
-                            std::cerr << "active:";
-                            for (auto & s : snoops) {
-                                std::cerr << " ( ";
-                                for (auto & p : s.offsets)
-                                    std::cerr << p << " ";
-                                std::cerr << ")";
+                        if (std::cv_status::timeout == snoop_cv.wait_until(guard, abort_time)) {
+                            auto bound_value = get_best_anywhere_value();
+                            if (bound_value != old_bound_value || snoops_changed) {
+                                snoops_changed = false;
+                                old_bound_value = bound_value;
+                                std::cerr << "active:";
+                                for (auto & s : snoops) {
+                                    std::cerr << " ( ";
+                                    for (auto & p : s.first.offsets)
+                                        std::cerr << p << " ";
+                                    std::cerr << ")";
+                                    if (! s.second)
+                                        std::cerr << "X";
+                                }
+                                std::cerr << " bound " << bound_value;
+                                std::cerr << std::endl;
                             }
-                            std::cerr << " bound " << get_best_anywhere_value();
-                            std::cerr << std::endl;
                         }
                     }
                     });
