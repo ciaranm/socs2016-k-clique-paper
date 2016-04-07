@@ -21,7 +21,7 @@ using std::chrono::duration_cast;
 
 namespace
 {
-    const constexpr int number_of_depths = 5;
+    const constexpr int number_of_depths = 6;
     const constexpr int number_of_steal_points = number_of_depths - 1;
 
     struct Subproblem
@@ -381,6 +381,12 @@ namespace
 
                                 if (depth < number_of_steal_points)
                                     thread_steal_points.at(i).points.at(depth).finished();
+                            }
+
+                            {
+                                std::unique_lock<std::mutex> guard(snoop_mutex);
+                                snoops.at(i).offsets = { -1 };
+                                snoops_changed = true;
                             }
 
                             // merge results
