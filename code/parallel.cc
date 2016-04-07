@@ -13,6 +13,7 @@
 #include <condition_variable>
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 using std::chrono::milliseconds;
 using std::chrono::steady_clock;
@@ -313,6 +314,12 @@ namespace
                 colour_class_order(initial_p, initial_p_order, initial_colours);
             }
 
+            // snoopy
+            std::mutex snoop_mutex;
+            std::condition_variable snoop_cv;
+            bool snoops_changed = false, finished = false;
+            std::vector<Subproblem> snoops(std::thread::hardware_concurrency());
+
             /* workers */
             for (unsigned i = 0 ; i < std::thread::hardware_concurrency() ; ++i) {
                 threads.push_back(std::thread([&, i] {
@@ -356,6 +363,12 @@ namespace
                                     position.reserve(graph.size());
                                     position.push_back(0);
 
+                                    {
+                                        std::unique_lock<std::mutex> guard(snoop_mutex);
+                                        snoops.at(i) = args.subproblem;
+                                        snoops_changed = true;
+                                    }
+
                                     // do some work
                                     expand(c, p, initial_p_order, initial_colours, position, local_result,
                                             &args.subproblem, &thread_steal_points.at(i));
@@ -377,9 +390,37 @@ namespace
                             }));
             }
 
+            // snoop thread
+            std::thread snoop_thread([&] {
+                    while (! finished) {
+                        auto abort_time = std::chrono::steady_clock::now() + std::chrono::seconds(1);
+                        std::unique_lock<std::mutex> guard(snoop_mutex);
+                        if (std::cv_status::timeout == snoop_cv.wait_until(guard, abort_time) && snoops_changed) {
+                            snoops_changed = false;
+                            std::cerr << "active:";
+                            for (auto & s : snoops) {
+                                std::cerr << " ( ";
+                                for (auto & p : s.offsets)
+                                    std::cerr << p << " ";
+                                std::cerr << ")";
+                            }
+                            std::cerr << " bound " << get_best_anywhere_value();
+                            std::cerr << std::endl;
+                        }
+                    }
+                    });
+
             // wait until they're done, and clean up threads
             for (auto & t : threads)
                 t.join();
+
+            // kill the snooper
+            {
+                std::unique_lock<std::mutex> guard(snoop_mutex);
+                finished = true;
+                snoop_cv.notify_all();
+            }
+            snoop_thread.join();
 
             return global_result;
         }
