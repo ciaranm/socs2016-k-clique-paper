@@ -62,8 +62,10 @@ cat $1 | while read filename name format ; do
             echo "&"
             echo $rc
             t=$(tail -n1 $FILE | cut -d' ' -f1 )
-            if [[ $t -ge 3600000 ]] ; then
+            if grep -q aborted $FILE && [[ $t -ge 3600000 ]] && [[ $t -le 3610000 ]] ; then
                 echo '$>$ 1 h'
+            elif grep -q aborted $FILE && [[ $t -ge 43200000 ]] && [[ $t -le 43201000 ]] ; then
+                echo '$>$ 12 h'
             else
                 [[ -s $FILE ]] && ruby -e "printf(\"%.1f \", $t / 1000.0)"
             fi
