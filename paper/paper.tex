@@ -11,8 +11,6 @@
 \usepackage{complexity}
 \usepackage[ruled,vlined]{algorithm2e} % algorithms
 \usepackage{booktabs}                  % less ugly tables
-\usepackage{tikz}                      % For pretty pictures
-\usepackage{afterpage}
 \usepackage[tight-spacing=true]{siunitx}
 \usepackage{tikz}                      % For pretty pictures
 \usepackage{gnuplot-lua-tikz}          % graphs
@@ -233,20 +231,20 @@ is a $k$-clique).
     \label{figure:k-cliques}
 \end{figure}
 
-A recent survey by Shahinpour and Butenko discusses algorithms and results for $k$-clique and
-$k$-club problems \cite{Shahinpour:2013}.  We adopt their notation of $\tilde{\omega}_k$ for the
-size of a maximum $k$-clique; the use of $\omega$ for the size of a maximum clique is standard.
+A recent survey by \citeauthor{Shahinpour:2013} \shortcite{Shahinpour:2013} discusses algorithms and
+results for $k$-clique and $k$-club problems .  We adopt their notation of $\tilde{\omega}_k$ for
+the size of a maximum $k$-clique; the use of $\omega$ for the size of a maximum clique is standard.
 They note that ``unlike the maximum clique problem, the maximum $s$-clique problem has not been the
 subject of extensive research and we are not aware of any computational results for this problem to
 date''. This is in contrast to the $k$-club problem, for which a wide range of computational results
 are available
-\cite{Bourjolly:2000,Bourjolly:2002,Mahdavi:2012,Hartung:2012,Chang:2013,Shahinpour:2013,Wotzlaw:2014}.
+\cite{Bourjolly:2000,Bourjolly:2002,Mahdavi:2012,Hartung:2012,Chang:2013,Shahinpour:2013,Wotzlaw:2014,Picker:2015,Carvalho:2016}.
 
 A maximum clique algorithm can easily be adapted to find a maximum $k$-clique in a graph $G$ by
 considering the graph $G^k$, which we describe below. However, it is not obvious that this is a
 viable approach: even if $G$ is sparse, $G^k$ may not be, and the maximum clique problem on dense
 graphs can be very challenging computationally. Here we take a state-of-the-art maximum clique
-algorithm which is suitable for use on dense graphs \cite{Prosser:2012,McCreesh:2013}, and
+algorithm which is suitable for use on dense graphs \cite{Prosser:2012}, and
 investigate whether this approach is feasible in practice. We modify the algorithm to include a new
 lazy ``global domination'' inference step---this technique provides no benefit for typical maximum
 clique problems, but for maximum $k$-clique graphs it sometimes gives improvements of several orders
@@ -269,9 +267,9 @@ Our approach for finding a maximum $k$-clique is presented as \cref{algorithm:ma
 step (\mcline{power}) is to replace our input graph $G$ with a modified graph $G^k$. This graph has
 the same vertex set as $G$, and edges between any two distinct vertices $v_1$ and $v_2$ iff there is
 a path of length at most $k$ between $v_1$ and $v_2$ in $G$. We may construct this graph using a
-bounded breadth-first search: we refer to Chang et al.\ \cite{Chang:2013} for how to implement this
-quickly in practice. Now it is easy to see that maximum cliques in $G^k$ correspond with maximum
-$k$-cliques in $G$ \cite{Balasundaram:2005}.
+bounded breadth-first search: we refer to \citeauthor{Chang:2013} \shortcite{Chang:2013} for how to
+implement this quickly in practice. Now it is easy to see that maximum cliques in $G^k$ correspond
+with maximum $k$-cliques in $G$ \cite{Balasundaram:2005}.
 
 \begin{algorithm}[t]\DontPrintSemicolon
     \begin{tikzpicture}[remember picture,overlay]
@@ -356,7 +354,7 @@ $k$-cliques in $G$ \cite{Balasundaram:2005}.
 \paragraph{Colouring}
 
 The current state-of-the-art for the maximum clique problem on dense graphs, due to Tomita et al.\
-\cite{Tomita:2003,Tomita:2007,Tomita:2010}, is to use branch and bound with a greedy graph
+\cite{Tomita:2007,Tomita:2010}, is to use branch and bound with a greedy graph
 colouring.  A \emph{colouring} of a graph is an assignment of colours to vertices, such that
 adjacent vertices are given different colours; if we can colour a graph using $c$ colours, then the
 graph cannot contain a clique of size greater than $c$ (each vertex in a clique must be given a
@@ -368,13 +366,14 @@ there are uncoloured vertices remaining (\mcline{uncoloured}), we try to give ea
 the current colour (\mclinerange{currentcolourstart}{currentcolourend}).  When we cannot colour any
 further vertices, we start a new colour (\mcline{colourplus1}).
 
-The key step in Tomita's algorithms is to produce a constructive colouring, which is used in a
-clever way.  The $\colourOrder$ routine does not just return the number of colours used. Instead, it
-returns a pair of arrays, $\order$ and $\bounds$. The $\order$ array contains vertices, in the order
-in which they were coloured. The $i$th entry of the $\bounds$ array contains the colour number used
-for the $i$th vertex in $\order$. We illustrate this in \cref{figure:colours}. Crucially, $\bounds$
-is non-decreasing (i.e.\ $\bounds[i+1] \ge \bounds[i]$), and we may colour the subgraph induced by
-the first $i$ vertices of $\order$ using $\bounds[i]$ colours.
+The key step in \citeauthor{Tomita:2010}'s algorithms is to produce a constructive colouring, which
+is used in a clever way.  The $\colourOrder$ routine does not just return the number of colours
+used. Instead, it returns a pair of arrays, $\order$ and $\bounds$. The $\order$ array contains
+vertices, in the order in which they were coloured. The $i$th entry of the $\bounds$ array contains
+the colour number used for the $i$th vertex in $\order$. We illustrate this in
+\cref{figure:colours}. Crucially, $\bounds$ is non-decreasing (i.e.\ $\bounds[i+1] \ge \bounds[i]$),
+and we may colour the subgraph induced by the first $i$ vertices of $\order$ using $\bounds[i]$
+colours.
 
 \begin{figure}[b]
     \centering
@@ -449,14 +448,15 @@ the first $i$ vertices of $\order$ using $\bounds[i]$ colours.
 \end{figure}
 
 The order in which vertices are selected for colouring can have a large effect upon performance.
-Various initial vertex orderings have been considered for the maximum clique problem---we refer to a
-computational study by Prosser for details \cite{Prosser:2012}. Here we will colour vertices in a
-static non-increasing degree order, which we do by permuting the graph at the top of search
-(\mcline{permute}). We will \emph{not} be using Tomita et al.'s dynamic tie-breaking mechanism
-\cite{Tomita:2010}: although doing so can sometimes be beneficial for small dense graphs in a
-maximum clique context, for the larger graphs we will be considering here the cubic cost is
-prohibitively expensive. For the same reason, we use a simple greedy colouring and do not use Tomita
-et al.'s (cubic) colour repair step \cite{Tomita:2010}.
+Various initial vertex orderings have been considered for the maximum clique problem
+\cite{Prosser:2012,DBLP:conf/lion/SegundoLB14}. Here we will colour vertices in a static
+non-increasing degree order, which we do by permuting the graph at the top of search
+(\mcline{permute}). We will \emph{not} be using a dynamic tie-breaking mechanism: although doing so
+can sometimes be beneficial for small dense graphs in a maximum clique context \cite{Tomita:2010},
+for the larger graphs we will be considering here the cubic cost is prohibitively expensive. For the
+same reason, and additionally because our colour classes typically contain many vertices, we use a
+simple greedy colouring and do not use a colour repair step \cite{Tomita:2010} or stronger
+MaxSAT-based inference \cite{DBLP:journals/cor/SegundoNB15,DBLP:conf/lion/LiJX15}.
 
 \paragraph{Branching and recursing}
 
@@ -490,10 +490,10 @@ search and backtrack.
 Aside from the $G^k$ step, what we have described so far is a standard maximum clique algorithm, and
 all we have done is opted out of certain more computationally expensive inference steps (more
 complicated initial vertex orderings, and cubic colourings). If we ignore the lines shown in blue,
-we obtain the maximum clique algorithm variation that Prosser \cite{Prosser:2012} calls ``MCSa1''.
-Now we will introduce a new lazy global domination rule which performs additional inference during
-search. This rule is not specific to the maximum $k$-clique problem, and is also valid for the
-maximum clique problem.
+we obtain the maximum clique algorithm variation that \citeauthor{Prosser:2012}
+\shortcite{Prosser:2012} calls ``MCSa1''.  Now we will introduce a new lazy global domination rule
+which performs additional inference during search. This rule is not specific to the maximum
+$k$-clique problem, and is also valid for the maximum clique problem.
 
 Let $v$ and $w$ be distinct vertices in a graph $G$ (they may or may not be adjacent). We say that
 $v$ \emph{dominates} $w$ if the neighbourhood of $w$, excluding $v$, is a (possibly non-strict)
@@ -544,10 +544,10 @@ typically does not lead to a smaller bound, since most colour classes contain ma
 when we select a $v$ from $\order$, it is now possible that $v$ has already been rejected. We check
 for this on line \mcline{alreadyrejected}.
 
-\paragraph{Bitset encoding} San Segundo et al.\ \cite{SanSegundo:2011,SanSegundo:2013} observed that
-the performance of Tomita's algorithms could be enhanced substantially by using a bitset encoding to
-obtain a form of SIMD-like parallelism, without altering the steps taken. We have taken such an
-approach here too, although we do not describe it explicitly---when permuting $G$ on line
+\paragraph{Bitset encoding} San Segundo et al.\ \shortcite{SanSegundo:2011,SanSegundo:2013} observed
+that the performance of Tomita's algorithms could be enhanced substantially by using a bitset
+encoding to obtain a form of SIMD-like parallelism, without altering the steps taken. We have taken
+such an approach here too, although we do not describe it explicitly---when permuting $G$ on line
 \mcline{permute}, the graph should be re-encoded as an array of adjacency bitsets. (It is not
 helpful to do this before constructing $G^k$.) Now the intersection on \mcline{pprime} becomes a
 simple bitwise ``and'' operation, and the intersection with complement on \mcline{notcolourable} is
@@ -557,29 +557,27 @@ testing whether the result is empty; the set difference is again a bitwise ``and
 
 \section{Experimental Results}
 
-Here we give experimental results on a range of standard benchmarks, and on real-world and random
-graphs. Where timing results are reported, the experiments were run on a machine with dual Intel
-E5-2687W v3 processors and 256GBytes RAM; single-threaded runtimes are given, except in
-\cref{table:parallel}, where 20 threads were used (our machine does not have hyper-threading
-enabled). Our software was implemented in C++, using C++11 native threads, and was compiled using
-GCC 5.1.0. The time taken to read in the graph from a file is excluded, but preprocessing time
-(including the construction of $G^k$ and the bitset encoding) is included. We use the term
-\emph{nodes} to refer to the number of recursive calls made by the branch-and-bound part of the
-algorithm.
+We now give experimental results on a range of standard benchmarks, and on real-world and random
+graphs. Experiments were run on a machine with dual Intel E5-2687W v3 processors and 256GBytes
+RAM; single-threaded runtimes are given, except in \cref{table:parallel}, where 20 threads were used
+(our machine does not have hyper-threading enabled). Our software was implemented in C++, using
+C++11 native threads, and was compiled using GCC 5.1.0. The time taken to read in the graph from a
+file is excluded, but preprocessing time (including the construction of $G^k$ and the bitset
+encoding) is included. We use the term \emph{nodes} to refer to the number of recursive calls made
+by the branch-and-bound part of the algorithm.
 
 \subsection{Real-World Graphs}
 
 We begin with a selection of real-world and standard benchmark graphs. We look at $k$ equal to 2, 3
-and 4 in every case---this is a standard practice for the $k$-club problem
-\cite{Chang:2013,Wotzlaw:2014}.
+and 4 in every case---this is a standard practice for the $k$-club problem.
 
 \paragraph{Erd\H{o}s collaboration graphs}
 
 In \cref{table:erdos} we present experimental results from Erd\H{o}s
 collaboration graphs from the Pajek dataset by Vladimir Batagelj and Andrej
 Mrvar\footnote{http://vlado.fmf.uni-lj.si/pub/networks/data/}.  We were able to solve all of
-these problems in under eight minutes (and all but three in under two seconds) when using the
-domination rule. However, using the unmodified maximum clique algorithm, two of these results did
+these problems in under four minutes (and all but three in under four seconds) when using the
+domination rule. However, using the unmodified maximum clique algorithm, three of these results did
 not finish running within one hour. Note that for $k = 4$, a $k$-clique covers all of ``Erdos02''.
 
 \begin{table}
@@ -609,10 +607,10 @@ is equal to the number of search nodes). This illustrates the necessity of lazin
 computed dominating pairs upfront, we would be paying a cubic preprocessing cost for an algorithm
 which is effectively quadratic in practice.
 
-By comparing these results with the $k$-club results of Chang et al.\ \cite{Chang:2013}, we see that
+By comparing these results with the $k$-club results of Chang et al.\ \shortcite{Chang:2013}, we see that
 in all but four cases the $k$-clique and $k$-club numbers are equal; all of these differences occur
 when $k = 4$. (Chang et al.\ did not investigate the ``Erdos02'' graph, but Wotzlaw
-\cite{Wotzlaw:2014} confirmed privately that the $k$-clique and $k$-club numbers are the same here
+\shortcite{Wotzlaw:2014} confirmed privately that the $k$-clique and $k$-club numbers are the same here
 too.) On the other hand, the $k$-clique numbers are sometimes much easier to find, both
 algorithmically and computationally.
 
@@ -649,8 +647,7 @@ domination step, the number of nodes required, and the runtime in seconds.}\labe
 
 With the domination rule, we solve all of these problems within a tenth of a second. Without, two of
 the results take over an hour, and the rest remain trivial. Note that in several cases, for some
-values of $k$ a $k$-clique covers the entire graph.  Again using Chang et al.'s results
-\cite{Chang:2013}, we see that for the first six graphs in this table the $k$-clique and $k$-club
+values of $k$ a $k$-clique covers the entire graph.  Again using Chang et al.'s results, we see that for the first six graphs in this table the $k$-clique and $k$-club
 numbers are the same for each value of $k$ (Chang et al.\ did not investigate ``c-fat500-10'' or
 ``p-hat300-1'').
 
@@ -688,12 +685,12 @@ step, the number of nodes required, and the runtime in seconds.}\label{table:par
 
 On the other hand, we sometimes see a significant cost where the domination rule does not help, and
 where the proof of optimality is not immediate: in ``3elt'' and ``4elt'', our runtimes can nearly
-double, and for ``cs4'' and ``cti'' the slowdown is sometimes over a factor of ten. In other words,
-laziness does not help when the rule turns out to be used, but useless.
+double, and for ``cs4'' and ``cti'' the slowdown is sometimes over a factor of ten. Thus laziness
+can be costly when the rule is used, but useless.
 
-Five of these graphs were considered for the $k$-club problem by Wotzlaw \cite{Wotzlaw:2014}. In all
-five cases, the $k$-clique and $k$-club numbers are the same for $k$ equal to 2, 3 and 4. However,
-the $k$-clique number was again consistently much easier to find.
+Five of these graphs were considered for the $k$-club problem by Wotzlaw \shortcite{Wotzlaw:2014}.
+In every case, the $k$-clique and $k$-club numbers are the same. However, the $k$-clique number was
+again consistently much easier to find.
 
 \paragraph{Clustering graphs}
 
@@ -701,7 +698,7 @@ the $k$-clique number was again consistently much easier to find.
 from the 10th DIMACS Implementation
 Challenge\footnote{http://www.cc.gatech.edu/dimacs10/archive/clustering.shtml}. Again, from a
 maximum clique perspective these would be considered unusually large graphs. However, only five were
-unsolvable within an hour (plus a sixth when the domination rule was not used), and half of the
+unsolvable within an hour (plus a sixth when the domination rule was not used), and over half of the
 problems took under two seconds.
 
 \begin{table}
@@ -726,16 +723,13 @@ problems took under two seconds.
 step, the number of nodes required, and the runtime in seconds.}\label{table:clustering}
 \end{table}
 
-Seven of these graphs were considered for the $k$-club problem by Wotzlaw \cite{Wotzlaw:2014}. In
+Seven of these graphs were considered for the $k$-club problem by Wotzlaw \shortcite{Wotzlaw:2014}. In
 these cases, the $2$-clique and $2$-club numbers are the same, except for ``football'' where the
 $2$-club number is 16 but the $2$-clique number is 17; for $k = 3$ and $k = 4$ there are some
 differences. The difference in computational difficulty between the $k$-clique and $k$-club problems
 really stands out here: for ``polblogs'' with $k = 3$ and $k = 4$, Wotzlaw was unable to prove
-optimality within an hour, but we required less than a second to do so. In both of these cases the
-$k$-clique and $k$-club numbers are the same, which suggests a potential improvement to $k$-club
-algorithms: first solve the maximum $k$-clique problem instead, and test whether the result found is
-a $k$-club, before embarking upon a more complicated search. (Note that a negative result does not
-imply that the $k$-clique and $k$-club numbers necessarily differ, since solutions are not unique.)
+optimality within an hour, but we required less than two seconds to do so. In both of these cases the
+$k$-clique and $k$-club numbers are the same.
 
 \subsection{Parallel Search}
 
@@ -761,6 +755,44 @@ imply that the $k$-clique and $k$-club numbers necessarily differ, since solutio
     the number of nodes required, and the runtime in seconds.}\label{table:parallel}
 \end{table}
 
+Parallel search is an active research area in maximum clique algorithms
+\cite{DBLP:journals/algorithms/McCreeshP13,DBLP:journals/jcisd/DepolliKRTJ13,DBLP:journals/topc/McCreeshP15,DBLP:journals/cor/SegundoLP16}.
+The idea is to work with a shared incumbent, and to speculatively explore portions of the search
+tree in parallel using multiple threads, in the hopes that most of the speculative work will
+contribute to the optimality proof.
+
+We selected the four graphs which we were unable to solve (for some values of $k$), along with two
+of the challenging graphs which required substantial amounts of search (at least half a million
+nodes) to solve, and repeated the experiments using parallel search with 20 threads, a timeout of 12
+hours, and the domination rule (with the laziness made thread-safe) enabled. The results are shown
+in \cref{table:parallel}.  Parallel search allowed us to close one more instance (``cond-mat'' with
+$k=3$), and improved the bounds on ??  further instances. However, to get sufficient work balance,
+we had to use the resplitting strategy proposed by \citeauthor{DBLP:journals/topc/McCreeshP15}
+\shortcite{DBLP:journals/topc/McCreeshP15}, and we had
+to allow for work splitting to depth 10 rather than depth 3. Simpler static
+decomposition approaches \cite{DBLP:journals/jcisd/DepolliKRTJ13,DBLP:journals/cor/SegundoLP16}
+would give little to no speedup on many harder $k$-clique instances, unless it were somehow possible
+to generate $\mathcal{O}(|V|^{10})$ subproblems.
+
+For the easier instances where the sequential runtime is known, the parallel search did more
+work---this is to be expected, since the work distribution approach we used recomputed parts of the
+search space (to allow for more efficient mutable data structures to be used during search), and
+speculative parallelism is unlikely to contribute to the solution when the sequential search tree is
+small. However, despite the extra work, and despite having to introduce overhead into early stages
+of the algorithm to allow for work stealing, and despite having more processing power but not more
+memory bandwidth, in no cases were the parallel runtimes substantially longer than the sequential
+runtimes (although in many cases they were not substantially better either). We also did not
+parallelise the construction of $G^k$ or the preprocessing stage of the algorithm, which in many
+cases dominated the runtime.
+
+On the other hand, for ``wing-nodal'' with $k=4$, the parallel run did much less work than the
+sequential run: a speedup of over 100 was obtained from 20 cores. A similar effect occurred with
+``cond-mat'' and $k=4$, and on several of the graphs where the incumbent was improved, it was
+improved after less time than the sequential runs took. This is because the work splitting mechanism
+we used explicitly diversifies at the top of search first, where branching heuristics are least
+likely to be correct, which leads to an initial incumbent being found faster---this is in line with
+recent observations that tailored work stealing should be favoured over randomised work stealing for
+combinatorial search problems \cite{DBLP:conf/cp/ChuSS09,DBLP:journals/topc/McCreeshP15}.
 
 \subsection{Random Graphs}
 
@@ -788,9 +820,8 @@ around edge probability 0.9, and is two orders of magnitude larger.
         We see that even for very low edge probabilities, a maximum $k$-clique
     quickly covers the entire graph when $k > 1$.}
     \label{figure:graph-omega}
-\end{figure}
 
-\begin{figure}[t]
+    \vspace*{2em}
     \centering
     \input{gen-graph-nodes}
     \caption{Search space size for random graphs $G(200, p)^k$, with varying edge probabilities. We see that
@@ -811,9 +842,8 @@ more pronounced, and shifts slightly towards the left (lower edge probabilities)
         probabilities, and different values of $n$. For $G(50, p)$, a $2$-clique has size average 50
     from $p = 0.42$ onwards.}
     \label{figure:graph-omega-2}
-\end{figure}
 
-\begin{figure}[t]
+    \vspace*{2em}
     \centering
     \input{gen-graph-nodes-2}
     \caption{The search space size for the maximum $2$-clique problem in random graphs $G(n, p)$
