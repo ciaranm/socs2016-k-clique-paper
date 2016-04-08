@@ -21,7 +21,7 @@ using std::chrono::duration_cast;
 
 namespace
 {
-    const constexpr int number_of_depths = 8;
+    const constexpr int number_of_depths = 16;
     const constexpr int number_of_steal_points = number_of_depths - 1;
 
     struct Subproblem
