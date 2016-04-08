@@ -858,12 +858,13 @@ We have shown that using a maximum clique algorithm to solve the maximum $k$-cli
 graph $G$ by considering $G^k$ in place of $G$ is feasible in practice. This is despite $G^k$
 potentially being dense even if $G$ is sparse.
 
-We introduced a new lazy global domination rule. This was sometimes extremely beneficial---without
-this rule, we would have been unable to solve six of the problem instances we considered, and many
-others would have taken much longer. However, even with laziness there is still sometimes a cost to
-pay when this rule does nothing. This rule is thus harmful for the graphs typically considered for
-the maximum clique problem, and we see the benefit of tailoring algorithms to the problem being
-solved. We suggest that a similar rule may also be useful for the maximum $k$-club problem.
+We introduced a new lazy global domination rule. This was sometimes extremely beneficial, leading to
+exponential reductions in the search space---without this rule, we would have been unable to solve
+eight of the problem instances we considered, and many others would have taken much longer. However,
+even with laziness there is still sometimes a cost to pay when this rule does nothing. This rule is
+thus harmful (although only by a polynomial factor) for the graphs typically considered for the
+maximum clique problem, and we see the benefit of tailoring algorithms to the problem being solved.
+We suggest that a similar rule may also be useful for the maximum $k$-club problem.
 
 Quite often, we saw $k$-clique numbers and $k$-club numbers being the same. However, solving the
 maximum $k$-clique problem is much easier, both in terms of the algorithm and computationally. Thus
