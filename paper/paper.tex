@@ -156,10 +156,10 @@ A clique in a graph is a set of vertices, each of which is adjacent to every oth
 set. Finding a clique of maximum size in a graph is one of the basic \NP-hard problems
 \cite{Garey:1990}; applications include geometry, coding theory, computer vision and bioinformatics
 \cite{Bomze:1999,Butenko:2006}. However, when analysing real-world data, a clique may be too strong
-a requirement. A $k$-clique\footnote{Or sometimes $n$-clique or $s$-clique; in an unfortunate clash
-of notation, ``$k$-clique problem'' is sometimes used elsewhere for the decision version of the
-clique problem, to distinguish it from the maximum clique problem.} is a relaxed form of clique,
-where instead of requiring each pair of vertices to be directly adjacent, we only require they be
+a requirement. A $k$-clique (or sometimes $n$-clique or $s$-clique---in an unfortunate clash of
+notation, ``$k$-clique problem'' is sometimes used elsewhere for the decision version of the clique
+problem, to distinguish it from the maximum clique problem) is a relaxed form of clique, where
+instead of requiring each pair of vertices to be directly adjacent, we only require they be
 connected by a path of length at most $k$ \cite{Luce:1950}.  Thus a $1$-clique \emph{is} a clique, a
 $2$-clique may be thought of as ``a group of people, all of whom either know each other or have a
 mutual acquaintance'', and so on. We illustrate this in \cref{figure:k-cliques}.  Determining the
@@ -495,12 +495,12 @@ we obtain the maximum clique algorithm variation that \citeauthor{Prosser:2012}
 which performs additional inference during search. This rule is not specific to the maximum
 $k$-clique problem, and is also valid for the maximum clique problem.
 
-Let $v$ and $w$ be distinct vertices in a graph $G$ (they may or may not be adjacent). We say that
-$v$ \emph{dominates} $w$ if the neighbourhood of $w$, excluding $v$, is a (possibly non-strict)
-subset of the neighbourhood of $v$, excluding $w$. From a maximum clique perspective, this means
-that $v$ is ``better than'' $w$. If $v$ and $w$ are adjacent, any clique containing $w$ may always
-be extended by the inclusion of $v$; if $v$ and $w$ are non-adjacent, replacing $w$ with $v$ in any
-clique containing $w$ cannot reduce the amount by which the clique may be grown.
+Let $v$ and $w$ be distinct vertices in a graph $G$. We say that $v$ \emph{dominates} $w$ if the
+neighbourhood of $w$, excluding $v$, is a (possibly non-strict) subset of the neighbourhood of $v$,
+excluding $w$. From a maximum clique perspective, this means that $v$ is ``better than'' $w$. If $v$
+and $w$ are adjacent, any clique containing $w$ may always be extended by the inclusion of $v$; if
+$v$ and $w$ are non-adjacent, replacing $w$ with $v$ in any clique containing $w$ cannot reduce the
+amount by which the clique may be grown.
 
 Suppose a graph does contain one or more pairs of dominating vertices. We could make use of this
 fact during search in at least two ways. Firstly, when accepting a vertex $w$, we may also
@@ -723,12 +723,12 @@ problems took under two seconds.
 step, the number of nodes required, and the runtime in seconds.}\label{table:clustering}
 \end{table}
 
-Seven of these graphs were considered for the $k$-club problem by Wotzlaw \shortcite{Wotzlaw:2014}. In
-these cases, the $2$-clique and $2$-club numbers are the same, except for ``football'' where the
+Seven of these graphs were considered for the $k$-club problem by Wotzlaw \shortcite{Wotzlaw:2014}.
+In these cases, the $2$-clique and $2$-club numbers are the same, except for ``football'' where the
 $2$-club number is 16 but the $2$-clique number is 17; for $k = 3$ and $k = 4$ there are some
-differences. The difference in computational difficulty between the $k$-clique and $k$-club problems
-really stands out here: for ``polblogs'' with $k = 3$ and $k = 4$, Wotzlaw was unable to prove
-optimality within an hour, but we required less than two seconds to do so. In both of these cases the
+differences. There is a large difference in computational difficulty between the $k$-clique and
+$k$-club problems: for ``polblogs'' with $k = 3$ and $k = 4$, Wotzlaw was unable to prove optimality
+within an hour, but we required less than two seconds to do so. In both of these cases the
 $k$-clique and $k$-club numbers are the same.
 
 \subsection{Parallel Search}
@@ -755,7 +755,7 @@ $k$-clique and $k$-club numbers are the same.
     the number of nodes required, and the runtime in seconds.}\label{table:parallel}
 \end{table}
 
-Parallel search is an active research area in maximum clique algorithms
+Parallel search is an active research area for maximum clique algorithms
 \cite{DBLP:journals/algorithms/McCreeshP13,DBLP:journals/jcisd/DepolliKRTJ13,DBLP:journals/topc/McCreeshP15,DBLP:journals/cor/SegundoLP16}.
 The idea is to work with a shared incumbent, and to speculatively explore portions of the search
 tree in parallel using multiple threads, in the hopes that most of the speculative work will
@@ -763,16 +763,16 @@ contribute to the optimality proof.
 
 We selected the four graphs which we were unable to solve (for some values of $k$), along with two
 of the challenging graphs which required substantial amounts of search (at least half a million
-nodes) to solve, and repeated the experiments using parallel search with 20 threads, a timeout of 12
-hours, and the domination rule (with the laziness made thread-safe) enabled. The results are shown
-in \cref{table:parallel}.  Parallel search allowed us to close one more instance (``cond-mat'' with
-$k=3$), and improved the bounds on ??  further instances. However, to get sufficient work balance,
-we had to use the resplitting strategy proposed by \citeauthor{DBLP:journals/topc/McCreeshP15}
-\shortcite{DBLP:journals/topc/McCreeshP15}, and we had
-to allow for work splitting to depth 10 rather than depth 3. Simpler static
-decomposition approaches \cite{DBLP:journals/jcisd/DepolliKRTJ13,DBLP:journals/cor/SegundoLP16}
-would give little to no speedup on many harder $k$-clique instances, unless it were somehow possible
-to generate $\mathcal{O}(|V|^{10})$ subproblems.
+nodes) to solve, and repeated the experiments using parallel search with 20 threads and the
+domination rule (with the laziness made thread-safe) enabled, using the resplitting strategy
+described by \citeauthor{DBLP:journals/topc/McCreeshP15} \shortcite{DBLP:journals/topc/McCreeshP15}.
+The results are shown in \cref{table:parallel}. Parallel search allowed us to close two more
+instances, and improved the bounds on ?? further instances with 12 hours of search. However, to get
+sufficient work balance, we had to allow for work splitting to depth 10 rather than depth 3. A close
+inspection of the search patterns showed that simpler static decomposition approaches
+\cite{DBLP:journals/jcisd/DepolliKRTJ13,DBLP:journals/cor/SegundoLP16} would give little to no
+speedup on many harder $k$-clique instances, unless it were somehow possible to generate
+$\mathcal{O}(|V|^{10})$ subproblems.
 
 For the easier instances where the sequential runtime is known, the parallel search did more
 work---this is to be expected, since the work distribution approach we used recomputed parts of the
@@ -787,31 +787,14 @@ cases dominated the runtime.
 
 On the other hand, for ``wing-nodal'' with $k=4$, the parallel run did much less work than the
 sequential run: a speedup of over 100 was obtained from 20 cores. A similar effect occurred with
-``cond-mat'' and $k=4$, and on several of the graphs where the incumbent was improved, it was
-improved after less time than the sequential runs took. This is because the work splitting mechanism
-we used explicitly diversifies at the top of search first, where branching heuristics are least
-likely to be correct, which leads to an initial incumbent being found faster---this is in line with
-recent observations that tailored work stealing should be favoured over randomised work stealing for
+``cond-mat'' and $k=4$, and on ?? of the graphs where the incumbent was improved, it was improved
+after less time than the sequential runs took. This is because the work splitting mechanism we used
+explicitly diversifies at the top of search first, where branching heuristics are least likely to be
+correct, which leads to an initial incumbent being found faster---this is in line with recent
+observations that tailored work stealing should be favoured over randomised work stealing for
 combinatorial search problems \cite{DBLP:conf/cp/ChuSS09,DBLP:journals/topc/McCreeshP15}.
 
 \subsection{Random Graphs}
-
-An Erd\H{o}s-R\'{e}nyi random graph $G(n, p)$ has $n$ vertices, and an edge between each distinct
-pair of vertices with probability $p$, chosen independently. Here we investigate the size of a
-maximum $k$-clique in such graphs, and the complexity of finding it. In each case, we use an average
-over 100 samples for every point.  We do not use the domination rule for these experiments: the
-probability of random graphs having dominating vertices is very low.
-
-In \cref{figure:graph-omega} we illustrate the average value of $\tilde{\omega}_k$ in $G(200,
-p)$ for different values of $k$, and a range of values of $p$ for the $x$-axis. We see that even for
-very low edge probabilities, a maximum $k$-clique quickly covers the entire graph.  (This is in contrast to
-the maximum clique problem, where a maximum clique does not even cover a quarter of the graph for
-edge probabilities below 0.75.) In \cref{figure:graph-nodes} we show the average size of the
-search space (number of nodes, or recursive calls made) for the same problem. We see that there is a
-complexity peak for each $k$, although the peak is much smaller for $k = 4$ than it is for $k = 3$,
-which is in turn much smaller than it is for $k = 2$. The peak also occurs for lower edge
-probabilities as $k$ increases. For contrast, for the maximum clique problem, the peak occurs at
-around edge probability 0.9, and is two orders of magnitude larger.
 
 \begin{figure}[t]
     \centering
@@ -830,6 +813,23 @@ around edge probability 0.9, and is two orders of magnitude larger.
         approximately 15 million search nodes.)}
     \label{figure:graph-nodes}
 \end{figure}
+
+An Erd\H{o}s-R\'{e}nyi random graph $G(n, p)$ has $n$ vertices, and an edge between each distinct
+pair of vertices with probability $p$, chosen independently. Here we investigate the size of a
+maximum $k$-clique in such graphs, and the complexity of finding it. In each case, we use an average
+over 100 samples for every point.  We do not use the domination rule for these experiments: the
+probability of random graphs having dominating vertices is very low.
+
+In \cref{figure:graph-omega} we illustrate the average value of $\tilde{\omega}_k$ in $G(200,
+p)$ for different values of $k$, and a range of values of $p$ for the $x$-axis. We see that even for
+very low edge probabilities, a maximum $k$-clique quickly covers the entire graph.  (This is in contrast to
+the maximum clique problem, where a maximum clique does not even cover a quarter of the graph for
+edge probabilities below 0.75.) In \cref{figure:graph-nodes} we show the average size of the
+search space (number of nodes, or recursive calls made) for the same problem. We see that there is a
+complexity peak for each $k$, although the peak is much smaller for $k = 4$ than it is for $k = 3$,
+which is in turn much smaller than it is for $k = 2$. The peak also occurs for lower edge
+probabilities as $k$ increases. For contrast, for the maximum clique problem, the peak occurs at
+around edge probability 0.9, and is two orders of magnitude larger.
 
 In \cref{figure:graph-omega-2,figure:graph-nodes-2} we show the effect of
 changing $n$ and fixing $k = 2$. As $n$ increases from 50 to 200, the complexity peak becomes much
@@ -856,7 +856,10 @@ more pronounced, and shifts slightly towards the left (lower edge probabilities)
 
 We have shown that using a maximum clique algorithm to solve the maximum $k$-clique algorithm for a
 graph $G$ by considering $G^k$ in place of $G$ is feasible in practice. This is despite $G^k$
-potentially being dense even if $G$ is sparse.
+potentially being dense even if $G$ is sparse---this ruled out the use of maximum clique algorithms
+which are designed for sparse graphs
+\cite{DBLP:conf/waw/PattabiramanPGLC13,DBLP:journals/cor/SegundoLP16}, and we were considering
+graphs with many more vertices than is typical for dense maximum clique algorithms.
 
 We introduced a new lazy global domination rule. This was sometimes extremely beneficial, leading to
 exponential reductions in the search space---without this rule, we would have been unable to solve
@@ -865,6 +868,12 @@ even with laziness there is still sometimes a cost to pay when this rule does no
 thus harmful (although only by a polynomial factor) for the graphs typically considered for the
 maximum clique problem, and we see the benefit of tailoring algorithms to the problem being solved.
 We suggest that a similar rule may also be useful for the maximum $k$-club problem.
+
+We were able to use parallelism to close two further instances, although this required a much finer
+level of task granularity than usual.  We suspect further progress could be made, for example, by
+tailoring the initial vertex ordering based upon what we know about the graphs, or by increasing the
+number of recursive calls per second by making the colouring stage cheaper, for example by reusing
+colour classes \cite{DBLP:conf/lion/NikolaevBS15}.
 
 Quite often, we saw $k$-clique numbers and $k$-club numbers being the same. However, solving the
 maximum $k$-clique problem is much easier, both in terms of the algorithm and computationally. Thus
