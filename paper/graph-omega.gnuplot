@@ -6,7 +6,7 @@ set output "gen-graph-omega.tex"
 set xlabel "Edge Probability"
 set ylabel "Size of Maximum $k$-clique"
 
-set key center right Left at 0.25, 100
+set key center right Left at 0.29, 61
 
 set border 3
 set grid
@@ -19,8 +19,8 @@ set mxtics
 set yrange [0:200]
 
 plot \
-    "g-200-1.futuna-bmcsa1-omega-plot" u 1:2 with lines lc 2 lt 1 lw 2 ti "$\\omega$", \
-    "g-200-2.futuna-bmcsa1-omega-plot" u 1:2 with lines lc 1 lt 1 lw 2 ti "$\\tilde{\\omega}_2$", \
-    "g-200-3.futuna-bmcsa1-omega-plot" u 1:2 with lines lc 6 lt 1 lw 2 ti "$\\tilde{\\omega}_3$", \
-    "g-200-4.futuna-bmcsa1-omega-plot" u 1:2 with lines lc 5 lt 1 lw 2 ti "$\\tilde{\\omega}_4$"
+    "g-200-1.futuna-bmcsa1-omega-plot" u 1:2 with lines lw 2 ti "$\\omega$", \
+    "g-200-2.futuna-bmcsa1-omega-plot" u 1:2 with lines lw 2 ti "$\\tilde{\\omega}_2$", \
+    "g-200-3.futuna-bmcsa1-omega-plot" u 1:2 with lines lw 2 ti "$\\tilde{\\omega}_3$", \
+    "g-200-4.futuna-bmcsa1-omega-plot" u 1:2 with lines lw 2 ti "$\\tilde{\\omega}_4$"
 
