@@ -6,7 +6,7 @@ set output "gen-graph-nodes-2.tex"
 set xlabel "Edge Probability"
 set ylabel "Average Search Nodes"
 
-set key top right Right at 0.29, 50000
+set key top right Right at 0.295, 50000
 
 set border 3
 set grid
