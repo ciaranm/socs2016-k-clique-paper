@@ -698,7 +698,7 @@ again consistently much easier to find.
 from the 10th DIMACS Implementation
 Challenge\footnote{http://www.cc.gatech.edu/dimacs10/archive/clustering.shtml}. Again, from a
 maximum clique perspective these would be considered unusually large graphs. However, only five were
-unsolvable within an hour (plus a sixth when the domination rule was not used), and over half of the
+unsolvable within an hour (plus a further two when the domination rule was not used), and over half of the
 problems took under two seconds.
 
 \begin{table}
@@ -785,12 +785,14 @@ runtimes (although in many cases they were not substantially better either). We 
 parallelise the construction of $G^k$ or the preprocessing stage of the algorithm, which in many
 cases dominated the runtime.
 
-On the other hand, for ``wing-nodal'' with $k=4$, the parallel run did much less work than the
-sequential run: a speedup of over 100 was obtained from 20 cores. A similar effect occurred with
-``cond-mat'' and $k=4$. This is because the work splitting mechanism we used explicitly diversifies
-at the top of search first, where branching heuristics are least likely to be correct, which leads
-to an initial incumbent being found faster---this is in line with recent observations that tailored
-work stealing should be favoured over randomised work stealing for combinatorial search problems
+As well as improving the results on the instances we could not solve sequentially, parallel search
+sometimes gave large improvements for the easier instances. For ``wing-nodal'' with $k=4$, the
+parallel run did much less work than the sequential run: a speedup of over 100 was obtained from 20
+cores. A similar effect occurred with ``cond-mat'' and $k=4$. This is because the work splitting
+mechanism we used explicitly diversifies at the top of search first, where branching heuristics are
+least likely to be correct, which leads to an initial incumbent being found faster---this is in line
+with recent observations that tailored work stealing should be favoured over randomised work
+stealing for combinatorial search problems
 \cite{DBLP:conf/cp/ChuSS09,DBLP:journals/topc/McCreeshP15}.
 
 \subsection{Random Graphs}
@@ -814,7 +816,7 @@ work stealing should be favoured over randomised work stealing for combinatorial
 \end{figure}
 
 An Erd\H{o}s-R\'{e}nyi random graph $G(n, p)$ has $n$ vertices, and an edge between each distinct
-pair of vertices with probability $p$, chosen independently. Here we investigate the size of a
+pair of vertices with probability $p$, chosen independently. We now investigate the size of a
 maximum $k$-clique in such graphs, and the complexity of finding it. In each case, we use an average
 over 100 samples for every point.  We do not use the domination rule for these experiments: the
 probability of random graphs having dominating vertices is very low.
@@ -857,22 +859,22 @@ We have shown that using a maximum clique algorithm to solve the maximum $k$-cli
 graph $G$ by considering $G^k$ in place of $G$ is feasible in practice. This is despite $G^k$
 potentially being dense even if $G$ is sparse---this ruled out the use of maximum clique algorithms
 which are designed for sparse graphs
-\cite{DBLP:conf/waw/PattabiramanPGLC13,DBLP:journals/cor/SegundoLP16}, and we were considering
+\cite{DBLP:conf/waw/PattabiramanPGLC13,DBLP:journals/cor/SegundoLP16}, and we were working with
 graphs with many more vertices than is typical for dense maximum clique algorithms.
 
 We introduced a new lazy global domination rule. This was sometimes extremely beneficial, leading to
 exponential reductions in the search space---without this rule, we would have been unable to solve
-eight of the problem instances we considered, and many others would have taken much longer. However,
+nine of the problem instances we considered, and many others would have taken much longer. However,
 even with laziness there is still sometimes a cost to pay when this rule does nothing. This rule is
 thus harmful (although only by a polynomial factor) for the graphs typically considered for the
 maximum clique problem, and we see the benefit of tailoring algorithms to the problem being solved.
 We suggest that a similar rule may also be useful for the maximum $k$-club problem.
 
 We were able to use parallelism to close two further instances, although this required a much finer
-level of task granularity than usual.  We suspect further progress could be made, for example, by
-tailoring the initial vertex ordering based upon what we know about the graphs, or by increasing the
-number of recursive calls per second by making the colouring stage cheaper, for example by reusing
-colour classes \cite{DBLP:conf/lion/NikolaevBS15}.
+level of task granularity than usual.  We suspect further progress could be made by tailoring the
+initial vertex ordering based upon what we know about the graphs, or by increasing the number of
+recursive calls per second by making the colouring stage cheaper, for example by reusing colour
+classes \cite{DBLP:conf/lion/NikolaevBS15}.
 
 Quite often, we saw $k$-clique numbers and $k$-club numbers being the same. However, solving the
 maximum $k$-clique problem is much easier, both in terms of the algorithm and computationally. Thus
