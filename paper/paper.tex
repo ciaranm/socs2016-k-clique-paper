@@ -767,9 +767,9 @@ nodes) to solve, and repeated the experiments using parallel search with 20 thre
 domination rule (with the laziness made thread-safe) enabled, using the resplitting strategy
 described by \citeauthor{DBLP:journals/topc/McCreeshP15} \shortcite{DBLP:journals/topc/McCreeshP15}.
 The results are shown in \cref{table:parallel}. Parallel search allowed us to close two more
-instances, and improved the bounds on ?? further instances with 12 hours of search. However, to get
-sufficient work balance, we had to allow for work splitting to depth 10 rather than depth 3. A close
-inspection of the search patterns showed that simpler static decomposition approaches
+instances, and gave improved bounds on the four remaining instances within 12 hours. However, to
+get sufficient work balance, we had to allow for work splitting to depth 10 rather than depth 3. A
+close inspection of the search patterns showed that simpler static decomposition approaches
 \cite{DBLP:journals/jcisd/DepolliKRTJ13,DBLP:journals/cor/SegundoLP16} would give little to no
 speedup on many harder $k$-clique instances, unless it were somehow possible to generate
 $\mathcal{O}(|V|^{10})$ subproblems.
@@ -787,12 +787,11 @@ cases dominated the runtime.
 
 On the other hand, for ``wing-nodal'' with $k=4$, the parallel run did much less work than the
 sequential run: a speedup of over 100 was obtained from 20 cores. A similar effect occurred with
-``cond-mat'' and $k=4$, and on ?? of the graphs where the incumbent was improved, it was improved
-after less time than the sequential runs took. This is because the work splitting mechanism we used
-explicitly diversifies at the top of search first, where branching heuristics are least likely to be
-correct, which leads to an initial incumbent being found faster---this is in line with recent
-observations that tailored work stealing should be favoured over randomised work stealing for
-combinatorial search problems \cite{DBLP:conf/cp/ChuSS09,DBLP:journals/topc/McCreeshP15}.
+``cond-mat'' and $k=4$. This is because the work splitting mechanism we used explicitly diversifies
+at the top of search first, where branching heuristics are least likely to be correct, which leads
+to an initial incumbent being found faster---this is in line with recent observations that tailored
+work stealing should be favoured over randomised work stealing for combinatorial search problems
+\cite{DBLP:conf/cp/ChuSS09,DBLP:journals/topc/McCreeshP15}.
 
 \subsection{Random Graphs}
 
