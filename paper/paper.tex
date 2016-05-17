@@ -29,11 +29,11 @@ decorations.pathreplacing, patterns, tikzmark, fit}
 \newcommand{\mclinerange}[2]{lines~\ref{line:mc:#1} to~\ref{line:mc:#2}}
 
 % cref style
-\crefname{algocf}{algorithm}{algorithm}
+\crefname{algocf}{Algorithm}{Algorithm}
 \Crefname{algocf}{Algorithm}{Algorithms}
-\crefname{figure}{figure}{figures}
+\crefname{figure}{Figure}{Figures}
 \Crefname{figure}{Figure}{Figures}
-\crefname{table}{table}{tables}
+\crefname{table}{Table}{Tables}
 \Crefname{table}{Table}{Tables}
 
 % common names of things
@@ -222,7 +222,7 @@ is a $k$-clique).
 \end{figure}
 
 A recent survey by \citeauthor{Shahinpour:2013} \shortcite{Shahinpour:2013} discusses algorithms and
-results for $k$-clique and $k$-club problems .  We adopt their notation of $\tilde{\omega}_k$ for
+results for $k$-clique and $k$-club problems.  We adopt their notation of $\tilde{\omega}_k$ for
 the size of a maximum $k$-clique; the use of $\omega$ for the size of a maximum clique is standard.
 They note that ``unlike the maximum clique problem, the maximum $s$-clique problem has not been the
 subject of extensive research and we are not aware of any computational results for this problem to
@@ -547,11 +547,11 @@ testing whether the result is empty; the set difference is again a bitwise ``and
 \section{Experimental Results}
 
 We now give experimental results on a range of standard benchmarks, and on real-world and random
-graphs. Experiments were run on a machine with dual Intel E5-2687W v3 processors and 256GBytes
-RAM; single-threaded runtimes are given, except in \cref{table:parallel}, where 20 threads were used
-(our machine does not have hyper-threading enabled). Our software was implemented in C++, using
-C++11 native threads, and was compiled using GCC 5.1.0. The time taken to read in the graph from a
-file is excluded, but preprocessing time (including the construction of $G^k$ and the bitset
+graphs. Experiments were run on a machine with dual 3.1GHz Intel E5-2687W v3 processors and
+256GBytes RAM; single-threaded runtimes are given, except in \cref{table:parallel}, where 20 threads
+were used (our machine does not have hyper-threading enabled). Our software was implemented in C++,
+using C++11 native threads, and was compiled using GCC 5.1.0. The time taken to read in the graph
+from a file is excluded, but preprocessing time (including the construction of $G^k$ and the bitset
 encoding) is included. We use the term \emph{nodes} to refer to the number of recursive calls made
 by the branch-and-bound part of the algorithm.
 
