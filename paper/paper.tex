@@ -356,14 +356,13 @@ there are uncoloured vertices remaining (\mcline{uncoloured}), we try to give ea
 the current colour (\mclinerange{currentcolourstart}{currentcolourend}).  When we cannot colour any
 further vertices, we start a new colour (\mcline{colourplus1}).
 
-The key step in \citeauthor{Tomita:2010}'s algorithms is to produce a constructive colouring, which
-is used in a clever way.  The $\colourOrder$ routine does not just return the number of colours
-used. Instead, it returns a pair of arrays, $\order$ and $\bounds$. The $\order$ array contains
-vertices, in the order in which they were coloured. The $i$th entry of the $\bounds$ array contains
-the colour number used for the $i$th vertex in $\order$. We illustrate this in
-\cref{figure:colours}. Crucially, $\bounds$ is non-decreasing (i.e.\ $\bounds[i+1] \ge \bounds[i]$),
-and we may colour the subgraph induced by the first $i$ vertices of $\order$ using $\bounds[i]$
-colours.
+The key step in \citeauthor{Tomita:2010}'s algorithms is to produce a constructive colouring---the
+$\colourOrder$ routine does not just return the number of colours used. Instead, it returns a pair
+of arrays, $\order$ and $\bounds$. The $\order$ array contains vertices, in the order in which they
+were coloured. The $i$th entry of the $\bounds$ array contains the colour number used for the $i$th
+vertex in $\order$. We illustrate this in \cref{figure:colours}. Crucially, $\bounds$ is
+non-decreasing (i.e.\ $\bounds[i+1] \ge \bounds[i]$), and we may colour the subgraph induced by the
+first $i$ vertices of $\order$ using $\bounds[i]$ colours.
 
 \begin{figure}[b]
     \centering
