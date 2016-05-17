@@ -149,7 +149,7 @@ set. Finding a clique of maximum size in a graph is one of the basic \NP-hard pr
 a requirement. A $k$-clique (or sometimes $n$-clique or $s$-clique---in an unfortunate clash of
 notation, ``$k$-clique problem'' is sometimes used elsewhere for the decision version of the clique
 problem, to distinguish it from the maximum clique problem) is a relaxed form of clique, where
-instead of requiring each pair of vertices to be directly adjacent, we only require they be
+instead of requiring each pair of vertices to be directly adjacent, we only require that they be
 connected by a path of length at most $k$ \cite{Luce:1950}.  Thus a $1$-clique \emph{is} a clique, a
 $2$-clique may be thought of as ``a group of people, all of whom either know each other or have a
 mutual acquaintance'', and so on. We illustrate this in \cref{figure:k-cliques}.  Determining the
@@ -231,15 +231,18 @@ are available
 \cite{Bourjolly:2000,Bourjolly:2002,Mahdavi:2012,Hartung:2012,Chang:2013,Shahinpour:2013,Wotzlaw:2014,Picker:2015,Carvalho:2016}.
 
 A maximum clique algorithm can easily be adapted to find a maximum $k$-clique in a graph $G$ by
-considering the graph $G^k$, which we describe below. However, it is not obvious that this is a
-viable approach: even if $G$ is sparse, $G^k$ may not be, and the maximum clique problem on dense
-graphs can be very challenging computationally. Here we take a state-of-the-art maximum clique
-algorithm which is suitable for use on dense graphs \cite{Prosser:2012}, and
-investigate whether this approach is feasible in practice. We modify the algorithm to include a new
-lazy ``global domination'' inference step---this technique provides no benefit for typical maximum
-clique problems, but for maximum $k$-clique graphs it sometimes gives improvements of several orders
-of magnitude. We present computational results for the maximum $k$-clique problem on a range of
-benchmark and real-world graphs. We finish with a detailed look at random graphs.
+considering the graph $G^k$: this graph has the same vertex set as $G$, and edges between any two
+distinct vertices $v_1$ and $v_2$ iff there is a path of length at most $k$ between $v_1$ and $v_2$
+in $G$. It is easy to see that maximum cliques in $G^k$ correspond with maximum $k$-cliques in $G$
+\cite{Balasundaram:2005}.  However, it is not obvious that this is a viable approach: even if $G$ is
+sparse, $G^k$ may not be, and the maximum clique problem on dense graphs can be very challenging
+computationally. Here we take a state-of-the-art maximum clique algorithm which is suitable for use
+on dense graphs \cite{Prosser:2012}, and investigate whether this approach is feasible in practice.
+We modify the algorithm to include a new lazy ``global domination'' inference step---this technique
+provides no benefit for typical maximum clique problems, but for maximum $k$-clique graphs it
+sometimes gives improvements of several orders of magnitude. We present computational results for
+the maximum $k$-clique problem on a range of benchmark and real-world graphs. We finish with a
+detailed look at random graphs.
 
 Throughout, our graphs are finite, undirected, and contain no loops. If $G$ is a graph with vertex
 set $V$ and edge set $E$, we may write $\vertexset(G)$ to mean $V$. The \emph{neighbourhood} of a
@@ -254,12 +257,9 @@ write $A + v$ and $A - v$ for $A \cup \{v\}$ and $A \setminus \{v\}$ respectivel
 \section{Algorithms}
 
 Our approach for finding a maximum $k$-clique is presented as \cref{algorithm:maxKClique}. Our first
-step (\mcline{power}) is to replace our input graph $G$ with a modified graph $G^k$. This graph has
-the same vertex set as $G$, and edges between any two distinct vertices $v_1$ and $v_2$ iff there is
-a path of length at most $k$ between $v_1$ and $v_2$ in $G$. We may construct this graph using a
-bounded breadth-first search: we refer to \citeauthor{Chang:2013} \shortcite{Chang:2013} for how to
-implement this quickly in practice. Now it is easy to see that maximum cliques in $G^k$ correspond
-with maximum $k$-cliques in $G$ \cite{Balasundaram:2005}.
+step (\mcline{power}) is to replace our input graph $G$ with $G^k$. We may construct this graph
+using a bounded breadth-first search: we refer to \citeauthor{Chang:2013} \shortcite{Chang:2013} for
+how to implement this quickly in practice.
 
 \begin{algorithm}[t]\DontPrintSemicolon
     \begin{tikzpicture}[remember picture,overlay]
@@ -597,11 +597,11 @@ is equal to the number of search nodes). This illustrates the necessity of lazin
 computed dominating pairs upfront, we would be paying a cubic preprocessing cost for an algorithm
 which is effectively quadratic in practice.
 
-By comparing these results with the $k$-club results of Chang et al.\ \shortcite{Chang:2013}, we see that
-in all but four cases the $k$-clique and $k$-club numbers are equal; all of these differences occur
-when $k = 4$. (Chang et al.\ did not investigate the ``Erdos02'' graph, but Wotzlaw
-\shortcite{Wotzlaw:2014} confirmed privately that the $k$-clique and $k$-club numbers are the same here
-too.) On the other hand, the $k$-clique numbers are sometimes much easier to find, both
+By comparing these results with the $k$-club results of Chang et al.\ \shortcite{Chang:2013}, we see
+that in all but four cases the $k$-clique and $k$-club numbers are equal; all of these differences
+occur when $k = 4$. (Chang et al.\ did not investigate the ``Erdos02'' graph, but
+\citeauthor{Wotzlaw:2014} confirmed privately that the $k$-clique and $k$-club numbers are the same
+here too.) On the other hand, the $k$-clique numbers are sometimes much easier to find, both
 algorithmically and computationally.
 
 \paragraph{Clique graphs}
