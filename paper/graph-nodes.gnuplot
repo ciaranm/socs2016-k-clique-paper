@@ -1,6 +1,6 @@
 # vim: set et ft=gnuplot sw=4 :
 
-set terminal tikz color size 3.3in,2.4in font '\tiny'
+set terminal tikz color size 3.3in,2.2in font '\scriptsize'
 set output "gen-graph-nodes.tex"
 
 set xlabel "Edge Probability"

@@ -14,10 +14,10 @@ cat $1 | while read filename name format ; do
             echo $name
         elif [[ $power == 3 ]] ; then
             # |V|
-            echo '\hspace*{0.5em}\color{gray}$|V|{=}'$(../code/about_graph --format $format ../instances/$filename | cut -d' ' -f1)'$'
+            echo '\hspace*{0.2em}\color{gray}$|V|{=}'$(../code/about_graph --format $format ../instances/$filename | cut -d' ' -f1)'$'
         elif [[ $power == 4 ]] ; then
             # |E|
-            echo '\hspace*{0.5em}\color{gray}$|E|{=}'$(../code/about_graph --format $format ../instances/$filename | cut -d' ' -f2)'$'
+            echo '\hspace*{0.2em}\color{gray}$|E|{=}'$(../code/about_graph --format $format ../instances/$filename | cut -d' ' -f2)'$'
         fi
 
         echo "& $power"
@@ -72,11 +72,7 @@ cat $1 | while read filename name format ; do
         done
 
         echo
-        if [[ $power == 4 ]] ; then
-            echo "\\\\[0.2cm]"
-        else
-            echo "\\\\*"
-        fi
+        echo "\\\\*"
     done
 done | sed -e '$d'
 

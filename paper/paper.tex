@@ -571,7 +571,7 @@ domination rule. However, using the unmodified maximum clique algorithm, three o
 not finish running within one hour. Note that for $k = 4$, a $k$-clique covers all of ``Erdos02''.
 
 \begin{table}
-    \tiny\setlength{\tabcolsep}{6pt} % carefully tuned!
+    \scriptsize\setlength{\tabcolsep}{5pt} % carefully tuned!
     \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
@@ -614,7 +614,7 @@ the ``c-fat'' family (all of which are trivial for a maximum clique solver), and
 ``p\_hat'' graphs.
 
 \begin{table}
-    \tiny\setlength{\tabcolsep}{6pt} % carefully tuned!
+    \scriptsize\setlength{\tabcolsep}{5pt} % carefully tuned!
     \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
@@ -629,10 +629,7 @@ the ``c-fat'' family (all of which are trivial for a maximum clique solver), and
     \bottomrule
 \end{tabular}
 \caption{Experimental results for DIMACS clique graphs with diameter greater
-    than two. For each graph, we consider $k$ equal to 2, 3 and 4. In each case
-    we show the density of $G^k$, the size of a maximum $k$-clique, and then
-    for both the unmodified algorithm and the algorithm with our lazy global
-domination step, the number of nodes required, and the runtime in seconds.}\label{table:clique}
+    than two.}\label{table:clique}
 \end{table}
 
 With the domination rule, we solve all of these problems within a tenth of a second. Without, two of
@@ -652,13 +649,13 @@ there is only one instance which we were unable to solve within an hour (and wit
 rule, there are two).
 
 \begin{table}
-    \tiny\setlength{\tabcolsep}{4pt} % carefully tuned!
+    \scriptsize\setlength{\tabcolsep}{3.5pt} % carefully tuned!
+    \setlength{\aboverulesep}{-0.4pt} % this only affects the cmidrules on this table
     \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
         & & & & \multicolumn{2}{c}{Unmodified} & \multicolumn{2}{c}{With Domination} \\
-    \cmidrule(lr){5-6}
-    \cmidrule(lr){7-8}
+        \cmidrule(lr){5-6} \cmidrule(lr){7-8}
     Instance & \multicolumn{1}{c}{$k$} & \multicolumn{1}{c}{$D$} & \multicolumn{1}{c}{$\tilde{\omega}_k$} &
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
@@ -666,11 +663,7 @@ rule, there are two).
     \inputhaxx{gen-table-dimacs10walshaw}
     \bottomrule
 \end{tabular}
-\caption{Experimental results for the smaller DIMACS partitioning graphs. For
-    each graph, we consider $k$ equal to 2, 3 and 4. In each case we show the
-    density of $G^k$, the size of a maximum $k$-clique, and then for both the
-    unmodified algorithm and the algorithm with our lazy global domination
-step, the number of nodes required, and the runtime in seconds.}\label{table:partitioning}
+    \caption{Results for smaller DIMACS partitioning graphs.}\label{table:partitioning}
 \end{table}
 
 On the other hand, we sometimes see a significant cost where the domination rule does not help, and
@@ -692,7 +685,8 @@ unsolvable within an hour (plus a further two when the domination rule was not u
 problems took under two seconds.
 
 \begin{table}
-    \tiny\setlength{\tabcolsep}{5pt} % carefully tuned!
+    \scriptsize\setlength{\tabcolsep}{3.8pt} % carefully tuned!
+    \setlength{\aboverulesep}{-0.4pt} % this only affects the cmidrules on this table
     \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
@@ -706,11 +700,7 @@ problems took under two seconds.
     \inputhaxx{gen-table-dimacs10cluster}
     \bottomrule
 \end{tabular}
-\caption{Experimental results for the smaller DIMACS clustering graphs. For
-    each graph, we consider $k$ equal to 2, 3 and 4. In each case we show the
-    density of $G^k$, the size of a maximum $k$-clique, and then for both the
-    unmodified algorithm and the algorithm with our lazy global domination
-step, the number of nodes required, and the runtime in seconds.}\label{table:clustering}
+\caption{Results for smaller DIMACS clustering graphs.}\label{table:clustering}
 \end{table}
 
 Seven of these graphs were considered for the $k$-club problem by Wotzlaw \shortcite{Wotzlaw:2014}.
@@ -724,7 +714,7 @@ $k$-clique and $k$-club numbers are the same.
 \subsection{Parallel Search}
 
 \begin{table}
-    \tiny\setlength{\tabcolsep}{4.6pt} % carefully tuned!
+    \scriptsize\setlength{\tabcolsep}{3.4pt} % carefully tuned!
     \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
