@@ -12,29 +12,29 @@ cat $1 | while read filename name ; do
 
     for power in 2 3 4 ; do
         if [[ $power == 2 ]] ; then
-            echo $name
+            echo -n $name " "
         elif [[ $power == 3 ]] ; then
             # |V|
-            echo '\hspace*{0.2em}\color{gray}$|V|{=}'$(../code/about_graph --format $FORMAT ../instances/$filename | cut -d' ' -f1)'$'
+            echo -n '\hspace*{0.2em}\color{gray}$|V|{=}'$(../code/about_graph --format $FORMAT ../instances/$filename | cut -d' ' -f1)'$'
         elif [[ $power == 4 ]] ; then
             # |E|
-            echo '\hspace*{0.2em}\color{gray}$|E|{=}'$(../code/about_graph --format $FORMAT ../instances/$filename | cut -d' ' -f2)'$'
+            echo -n '\hspace*{0.2em}\color{gray}$|E|{=}'$(../code/about_graph --format $FORMAT ../instances/$filename | cut -d' ' -f2)'$'
         fi
 
-        echo "& $power"
+        echo -n "& $power"
 
         # density
-        echo "&"
+        echo -n "&"
         read v e x < ${RESULTS_about}-${power}/$name.out
         ruby -e "printf('%.2f', (2.0 * $e) / ($v * ($v - 1.0)))"
 
         # omega
-        echo "&"
+        echo -n "&"
         FILE=${RESULTS_cconlgd}-${power}/$name.out
         if grep -q aborted $FILE ; then
-            echo '${\ge}'$(head -n1 $FILE | cut -d' ' -f1)'$'
+            echo -n '${\ge}'$(head -n1 $FILE | cut -d' ' -f1)'$'
         else
-            head -n1 $FILE | cut -d' ' -f1
+            echo -n $(head -n1 $FILE | cut -d' ' -f1 )
         fi
 
         for method in "ccon" "cconlgd" ; do
@@ -50,30 +50,27 @@ cat $1 | while read filename name ; do
             fi
 
             # nodes
-            echo "&"
-            echo $rc
+            echo -n "&"
+            echo -n $rc
             n=$(head -n1 $FILE | cut -d' ' -f2)
             if [[ $n -ge 1000000 ]] ; then
-                ruby -e "printf(\"\\\\num{%.1e}\", $n)"
+                echo -n $(ruby -e "printf(\"\\\\num{%.1e}\", $n)" )
             else
-                echo $n
+                echo -n $n
             fi
 
             # time
-            echo "&"
-            echo $rc
+            echo -n "&"
+            echo -n $rc
             t=$(tail -n1 $FILE | cut -d' ' -f1 )
             if grep -q aborted $FILE && [[ $t -ge 3600000 ]] && [[ $t -le 3610000 ]] ; then
-                echo '$>$ 1 h'
+                echo -n '$>$ 1 h'
             else
-                [[ -s $FILE ]] && ruby -e "printf(\"%.1f \", $t / 1000.0)"
+                [[ -s $FILE ]] && echo -n $(ruby -e "printf(\"%.1f \", $t / 1000.0)" )
             fi
         done
 
-        echo
-        echo "\\\\*"
+        echo "\\\\"
     done
-done | sed -e '$d'
-
-echo "\\\\"
+done
 

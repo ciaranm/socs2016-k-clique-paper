@@ -18,14 +18,15 @@ gen-table-parallel.tex : make-table-parallel.bash parallel.list
 	bash ./make-table-parallel.bash parallel.list > $@
 
 GRAPHS = \
-	gen-graph-nodes-2.tex \
-	gen-graph-nodes.tex \
-	gen-graph-omega-2.tex \
-	gen-graph-omega.tex
+	gen-graph-nodes-2.pdf \
+	gen-graph-nodes.pdf \
+	gen-graph-omega-2.pdf \
+	gen-graph-omega.pdf
 
 graphs : $(GRAPHS)
 
-gen-graph-%.tex : graph-%.gnuplot
+gen-graph-%.pdf : graph-%.gnuplot
 	gnuplot $<
-	sed -i -e '4,5s/^\(\\path.*\)/\% \1/' $@ # epic haxx
+	sed -i -e '19s/^\(\\path.*\)/\% \1/' gen-graph-$*.tex # epic haxx
+	latexmk -pdf gen-graph-$*
 

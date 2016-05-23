@@ -7,21 +7,16 @@
 \usepackage{helvet}
 \usepackage{courier}
 
-\usepackage{cleveref}
-\usepackage{complexity}
-\usepackage[ruled,vlined]{algorithm2e} % algorithms
-\usepackage{booktabs}                  % less ugly tables
-\usepackage[tight-spacing=true]{siunitx}
-\usepackage{tikz}                      % For pretty pictures
-\usepackage{gnuplot-lua-tikz}          % graphs
-
-% \usepackage{showframe}
+\usepackage{cleveref}                    % \cref
+\usepackage{complexity}                  % \NP
+\usepackage[ruled,vlined]{algorithm2e}   % algorithms
+\usepackage{booktabs}                    % less ugly tables
+\usepackage[tight-spacing=true]{siunitx} % formatting of units
+\usepackage{tikz}                        % For pretty pictures
+\usepackage{graphicx}                    % For the charts
 
 \usetikzlibrary{arrows, shadows, calc, positioning, decorations, decorations.pathmorphing,
 decorations.pathreplacing, patterns, tikzmark, fit}
-
-% \input isn't expandable. yay.
-\makeatletter\newcommand*\inputhaxx[1]{\@@input #1}\makeatother
 
 % labels in algorithms
 \newcommand{\mclabel}[1]{\label{line:mc:#1}}
@@ -68,48 +63,16 @@ decorations.pathreplacing, patterns, tikzmark, fit}
 \tikzset{notvertex/.style={vertex, color=white, text=black}}
 \tikzset{plainvertex/.style={vertex}}
 \tikzset{selectedvertex/.style={vertex, fill=safedarkblue}}
-\tikzset{delvertex/.style={vertex, dotted, color=safelightgrey}}
 \tikzset{vertexc1/.style={vertex, fill=safelightblue}}
 \tikzset{vertexc2/.style={vertex, fill=safedarkblue, text=safenearlywhite}}
 \tikzset{vertexc3/.style={vertex, fill=safelightorange}}
 \tikzset{vertexc4/.style={vertex, fill=safedarkorange, text=safenearlywhite}}
-
 \tikzset{edge/.style={color=safelightgrey}}
 \tikzset{bedge/.style={very thick}}
-\tikzset{deledge/.style={dotted, color=safelightgrey}}
-\tikzset{edgel1/.style={color=safeverydarkblue}}
-\tikzset{edgel2/.style={color=safemediumorange}}
-\tikzset{edgel3/.style={very thick, color=safedarkblue}}
-\tikzset{edgel4/.style={very thick, color=safelightorange}}
-
 \tikzset{processarrow/.style={->, very thick, decorate, decoration={snake, post length=0.5mm}}}
 \tikzset{brace/.style={decorate, decoration={brace}, very thick}}
 \tikzset{label/.style={font=\small}}
 
-\makeatletter\@ifpackageloaded{showframe}{
-    % show lines down the middle columns too
-    % http://tex.stackexchange.com/questions/16199/test-if-a-package-or-package-option-is-loaded
-\newlength\Fcolumnseprule\setlength\Fcolumnseprule{0.4pt}\def\@outputdblcol{%
-  \if@firstcolumn\global \@firstcolumnfalse \global \setbox\@leftcolumn \box\@outputbox
-  \else
-    \global \@firstcolumntrue
-    \setbox\@outputbox \vbox{\hb@xt@\textwidth{\hb@xt@\columnwidth{\box\@leftcolumn \hss}%
-    \vrule \@width\Fcolumnseprule\hfil{\normalcolor\vrule \@width\columnseprule}
-    \hfil\vrule \@width\Fcolumnseprule\hb@xt@\columnwidth {\box\@outputbox \hss}}}\@combinedblfloats\@outputpage
-    \begingroup\@dblfloatplacement\@startdblcolumn\@whilesw\if@fcolmade \fi{\@outputpage\@startdblcolumn}\endgroup
-  \fi
-}}{}
-\makeatother
-
-\renewcommand{\topfraction}{0.9}
-\renewcommand{\bottomfraction}{0.8}
-\renewcommand{\dbltopfraction}{0.9}
-\renewcommand{\textfraction}{0.05}
-\setcounter{dbltopnumber}{2}
-\renewcommand{\floatpagefraction}{0.85}
-\renewcommand{\dblfloatpagefraction}{0.85}
-
-% \frenchspacing
 \setlength{\pdfpagewidth}{8.5in}
 \setlength{\pdfpageheight}{11in}
 \pdfinfo{
@@ -261,7 +224,7 @@ step (\mcline{power}) is to replace our input graph $G$ with $G^k$. We may const
 using a bounded breadth-first search: we refer to \citeauthor{Chang:2013} \shortcite{Chang:2013} for
 how to implement this quickly in practice.
 
-\begin{algorithm}[t]\DontPrintSemicolon
+\begin{algorithm}[t!]\DontPrintSemicolon
     \begin{tikzpicture}[remember picture,overlay]
         \coordinate (cvrej1c) at ($(pic cs:cvrej1) + (0, 0.15)$);
         \coordinate (cvrej2c) at ($(pic cs:cvrej2) + (0, 0.00)$);
@@ -581,7 +544,27 @@ not finish running within one hour. Note that for $k = 4$, a $k$-clique covers a
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
     \midrule
-    \inputhaxx{gen-table-erdos}
+Erdos971  & 2&0.09&42&42&0.0&42&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}472$& 3&0.31&117&121&0.0&119&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}1314$& 4&0.56&235&468&0.0&468&0.0\\
+Erdos972  & 2&0.01&258&258&0.5&258&0.5\\
+\hspace*{0.2em}\color{gray}$|V|{=}5488$& 3&0.09&517&537&0.8&521&0.8\\
+\hspace*{0.2em}\color{gray}$|E|{=}8972$& 4&0.35&1509&\color{gray}\num{1.1e+07}&\color{gray}$>$ 1 h&8197&3.8\\
+Erdos981  & 2&0.09&43&43&0.0&43&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}485$& 3&0.31&123&358&0.0&354&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}1381$& 4&0.57&245&246&0.0&246&0.0\\
+Erdos982  & 2&0.01&274&274&0.6&274&0.6\\
+\hspace*{0.2em}\color{gray}$|V|{=}5822$& 3&0.09&547&555&0.9&547&0.9\\
+\hspace*{0.2em}\color{gray}$|E|{=}9505$& 4&0.35&1594&\color{gray}\num{1.1e+07}&\color{gray}$>$ 1 h&618826&207.3\\
+Erdos991  & 2&0.09&43&44&0.0&44&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}492$& 3&0.31&126&375&0.0&374&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}1417$& 4&0.57&246&491&0.0&491&0.0\\
+Erdos992  & 2&0.01&277&277&0.6&277&0.6\\
+\hspace*{0.2em}\color{gray}$|V|{=}6100$& 3&0.09&562&573&0.9&562&0.8\\
+\hspace*{0.2em}\color{gray}$|E|{=}9939$& 4&0.35&1643&\color{gray}\num{1.0e+07}&\color{gray}$>$ 1 h&202543&69.4\\
+Erdos02  & 2&0.02&508&508&0.8&508&0.8\\
+\hspace*{0.2em}\color{gray}$|V|{=}6927$& 3&0.20&1014&1022&1.3&1015&1.3\\
+\hspace*{0.2em}\color{gray}$|E|{=}11850$& 4&1.00&6927&6927&11.9&6927&10.9\\
     \bottomrule
 \end{tabular}
 \caption{Experimental results for Erd\H{o}s collaboration graphs. For each
@@ -624,7 +607,30 @@ the ``c-fat'' family (all of which are trivial for a maximum clique solver), and
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
     \midrule
-    \inputhaxx{gen-table-dimacs}
+c-fat200-1  & 2&0.13&18&41&0.0&35&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}200$& 3&0.19&24&74&0.0&48&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}1534$& 4&0.24&30&134&0.0&65&0.0\\
+c-fat200-2  & 2&0.27&35&35&0.0&35&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}200$& 3&0.39&46&488&0.0&102&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}3235$& 4&0.50&57&1496&0.0&128&0.0\\
+c-fat200-5  & 2&0.71&87&11513&0.0&257&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}200$& 3&1.00&200&200&0.0&200&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}8473$& 4&1.00&200&200&0.0&200&0.0\\
+c-fat500-1  & 2&0.06&21&52&0.0&43&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}500$& 3&0.09&28&28&0.0&28&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}4459$& 4&0.11&35&35&0.0&35&0.0\\
+c-fat500-2  & 2&0.12&39&134&0.0&79&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}500$& 3&0.17&52&52&0.0&52&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}9139$& 4&0.22&65&65&0.0&65&0.0\\
+c-fat500-5  & 2&0.31&96&10133&0.1&196&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}500$& 3&0.44&128&128&0.1&128&0.1\\
+\hspace*{0.2em}\color{gray}$|E|{=}23191$& 4&0.56&159&\color{gray}\num{1.5e+09}&\color{gray}$>$ 1 h&326&0.1\\
+c-fat500-10  & 2&0.62&189&\color{gray}\num{1.1e+09}&\color{gray}$>$ 1 h&560&0.1\\
+\hspace*{0.2em}\color{gray}$|V|{=}500$& 3&0.87&252&252&0.1&252&0.1\\
+\hspace*{0.2em}\color{gray}$|E|{=}46627$& 4&1.00&500&500&0.1&500&0.1\\
+p-hat300-1  & 2&1.00&299&299&0.0&299&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}300$& 3&1.00&300&300&0.1&300&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}10933$& 4&1.00&300&300&0.0&300&0.0\\
     \bottomrule
 \end{tabular}
 \caption{Experimental results for DIMACS clique graphs with diameter greater
@@ -649,7 +655,12 @@ rule, there are two).
 
 \begin{table}
     \scriptsize\setlength{\tabcolsep}{3.5pt} % carefully tuned!
-    \setlength{\aboverulesep}{-0.4pt} % this only affects the cmidrules on this table
+    % The following only affects the cmidrules on this table: by default booktabs sticks larger
+    % spacing than normal latex tables do above and below mid-table rules. Usually that's fine, but
+    % here the table is just slightly too large for the page, and I'd rather not use a smaller font
+    % or cut one of the data points. (I suppose the other option would just be to just cut the
+    % cmidrules out entirely, and then it fits perfectly...)
+    \setlength{\aboverulesep}{-0.4pt}
     \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
@@ -659,7 +670,66 @@ rule, there are two).
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
     \midrule
-    \inputhaxx{gen-table-dimacs10walshaw}
+3elt  & 2&0.00&10&340&0.3&340&0.6\\
+\hspace*{0.2em}\color{gray}$|V|{=}4720$& 3&0.01&16&1582&0.4&1582&1.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}13722$& 4&0.01&27&911&0.4&911&0.7\\
+4elt  & 2&0.00&11&486&3.8&486&5.5\\
+\hspace*{0.2em}\color{gray}$|V|{=}15606$& 3&0.00&20&717&3.9&717&6.1\\
+\hspace*{0.2em}\color{gray}$|E|{=}45878$& 4&0.00&36&345&3.9&345&4.4\\
+add20  & 2&0.04&124&124&0.1&124&0.2\\
+\hspace*{0.2em}\color{gray}$|V|{=}2395$& 3&0.25&671&671&0.2&671&0.2\\
+\hspace*{0.2em}\color{gray}$|E|{=}7462$& 4&0.67&1454&1454&0.5&1454&0.5\\
+add32  & 2&0.00&32&32&0.4&32&0.4\\
+\hspace*{0.2em}\color{gray}$|V|{=}4960$& 3&0.01&99&286&0.4&194&0.4\\
+\hspace*{0.2em}\color{gray}$|E|{=}9462$& 4&0.03&268&268&0.4&268&0.5\\
+bcsstk29  & 2&0.01&72&9752&3.7&963&8.7\\
+\hspace*{0.2em}\color{gray}$|V|{=}13992$& 3&0.02&132&\num{2.7e+07}&1576.2&7781&11.4\\
+\hspace*{0.2em}\color{gray}$|E|{=}302748$& 4&0.04&210&\color{gray}\num{3.2e+07}&\color{gray}$>$ 1 h&21689&16.9\\
+bcsstk30  & 2&0.01&219&224&14.5&219&14.5\\
+\hspace*{0.2em}\color{gray}$|V|{=}28924$& 3&0.03&496&509&17.8&496&17.6\\
+\hspace*{0.2em}\color{gray}$|E|{=}1007284$& 4&0.05&843&854&23.7&845&23.3\\
+bcsstk31  & 2&0.00&189&189&20.2&189&20.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}35588$& 3&0.01&278&605&21.8&369&22.8\\
+\hspace*{0.2em}\color{gray}$|E|{=}572914$& 4&0.02&428&119640&97.9&6588&29.8\\
+bcsstk33  & 2&0.03&141&141&1.3&141&1.3\\
+\hspace*{0.2em}\color{gray}$|V|{=}8738$& 3&0.08&228&26033&6.3&1744&3.8\\
+\hspace*{0.2em}\color{gray}$|E|{=}291583$& 4&0.15&435&\num{2.0e+06}&380.4&52779&17.6\\
+crack  & 2&0.00&10&2894&1.5&2894&7.8\\
+\hspace*{0.2em}\color{gray}$|V|{=}10240$& 3&0.00&17&4996&1.7&4987&10.4\\
+\hspace*{0.2em}\color{gray}$|E|{=}30380$& 4&0.01&31&2173&1.7&2173&7.0\\
+cs4  & 2&0.00&6&5780&8.2&5780&73.4\\
+\hspace*{0.2em}\color{gray}$|V|{=}22499$& 3&0.00&12&7812&8.4&7812&78.5\\
+\hspace*{0.2em}\color{gray}$|E|{=}43858$& 4&0.00&18&29032&9.5&29032&136.3\\
+cti  & 2&0.00&7&8918&4.5&8918&58.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}16840$& 3&0.00&15&6406&4.8&6406&45.5\\
+\hspace*{0.2em}\color{gray}$|E|{=}48232$& 4&0.01&26&62316&7.0&62316&113.6\\
+data  & 2&0.01&18&638&0.1&617&0.2\\
+\hspace*{0.2em}\color{gray}$|V|{=}2851$& 3&0.02&32&4982&0.1&4913&0.2\\
+\hspace*{0.2em}\color{gray}$|E|{=}15093$& 4&0.04&52&40095&0.4&36089&0.4\\
+fe-4elt2  & 2&0.00&13&61&1.7&61&2.1\\
+\hspace*{0.2em}\color{gray}$|V|{=}11143$& 3&0.00&20&389&1.8&389&3.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}32818$& 4&0.01&32&448&1.8&446&3.0\\
+fe-pwt  & 2&0.00&16&95&21.8&95&22.6\\
+\hspace*{0.2em}\color{gray}$|V|{=}36519$& 3&0.00&29&167&21.0&167&24.4\\
+\hspace*{0.2em}\color{gray}$|E|{=}144794$& 4&0.00&52&224&21.1&224&23.9\\
+fe-sphere  & 2&0.00&7&14173&4.5&14173&53.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}16386$& 3&0.00&12&34328&4.9&34328&111.1\\
+\hspace*{0.2em}\color{gray}$|E|{=}49152$& 4&0.00&19&73632&6.3&73632&148.7\\
+memplus  & 2&0.02&574&574&5.8&574&5.7\\
+\hspace*{0.2em}\color{gray}$|V|{=}17758$& 3&0.26&8057&8061&49.4&8058&48.2\\
+\hspace*{0.2em}\color{gray}$|E|{=}54196$& 4&0.74&8963&8963&95.5&8963&92.4\\
+uk  & 2&0.00&5&433&0.3&433&0.7\\
+\hspace*{0.2em}\color{gray}$|V|{=}4824$& 3&0.00&8&1891&0.4&1891&0.9\\
+\hspace*{0.2em}\color{gray}$|E|{=}6837$& 4&0.01&14&2168&0.4&2168&1.0\\
+vibrobox  & 2&0.02&121&302&2.9&302&3.5\\
+\hspace*{0.2em}\color{gray}$|V|{=}12328$& 3&0.08&408&1984&8.9&1984&10.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}165250$& 4&0.26&${\ge}1094$&\color{gray}\num{7.9e+06}&\color{gray}$>$ 1 h&\color{gray}\num{7.4e+06}&\color{gray}$>$ 1 h\\
+whitaker3  & 2&0.00&9&1222&1.3&1222&4.8\\
+\hspace*{0.2em}\color{gray}$|V|{=}9800$& 3&0.00&15&3724&1.4&3724&7.4\\
+\hspace*{0.2em}\color{gray}$|E|{=}28989$& 4&0.01&23&6530&1.5&6530&9.5\\
+wing-nodal  & 2&0.01&29&648&2.1&648&3.5\\
+\hspace*{0.2em}\color{gray}$|V|{=}10937$& 3&0.02&54&13091&4.2&13039&15.2\\
+\hspace*{0.2em}\color{gray}$|E|{=}75488$& 4&0.04&114&\num{6.0e+07}&1981.3&\num{6.0e+07}&1908.9\\
     \bottomrule
 \end{tabular}
     \caption{Results for smaller DIMACS partitioning graphs.}\label{table:partitioning}
@@ -685,7 +755,12 @@ problems took under two seconds.
 
 \begin{table}
     \scriptsize\setlength{\tabcolsep}{3.8pt} % carefully tuned!
-    \setlength{\aboverulesep}{-0.4pt} % this only affects the cmidrules on this table
+    % The following only affects the cmidrules on this table: by default booktabs sticks larger
+    % spacing than normal latex tables do above and below mid-table rules. Usually that's fine, but
+    % here the table is just slightly too large for the page, and I'd rather not use a smaller font
+    % or cut one of the data points. (I suppose the other option would just be to just cut the
+    % cmidrules out entirely, and then it fits perfectly...)
+    \setlength{\aboverulesep}{-0.4pt}
     \centering
     \begin{tabular}{l c rr rr rr}
         \toprule
@@ -696,7 +771,66 @@ problems took under two seconds.
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
     \midrule
-    \inputhaxx{gen-table-dimacs10cluster}
+adjnoun  & 2&0.50&50&50&0.0&50&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}112$& 3&0.91&83&164&0.0&164&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}425$& 4&0.99&107&107&0.0&107&0.0\\
+as-22july06  & 2&0.04&2391&2391&11.7&2391&11.3\\
+\hspace*{0.2em}\color{gray}$|V|{=}22963$& 3&0.36&8455&\color{gray}374427&\color{gray}$>$ 1 h&94497&898.2\\
+\hspace*{0.2em}\color{gray}$|E|{=}48436$& 4&0.79&14911&14911&252.0&14911&250.4\\
+astro-ph  & 2&0.01&361&365&5.0&362&5.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}16706$& 3&0.10&1553&1567&15.3&1560&12.5\\
+\hspace*{0.2em}\color{gray}$|E|{=}121251$& 4&0.35&${\ge}4040$&\color{gray}\num{1.0e+06}&\color{gray}$>$ 1 h&\color{gray}\num{1.1e+06}&\color{gray}$>$ 1 h\\
+celegans-meta  & 2&0.44&238&238&0.0&238&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}453$& 3&0.89&371&371&0.0&371&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}2025$& 4&0.98&432&432&0.0&432&0.0\\
+celegansneural  & 2&0.55&135&135&0.0&135&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}297$& 3&0.95&245&245&0.0&245&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}2148$& 4&1.00&295&295&0.0&295&0.0\\
+cond-mat  & 2&0.00&108&108&4.5&108&4.5\\
+\hspace*{0.2em}\color{gray}$|V|{=}16726$& 3&0.01&250&1403&5.1&844&5.6\\
+\hspace*{0.2em}\color{gray}$|E|{=}47594$& 4&0.05&720&\color{gray}\num{7.3e+06}&\color{gray}$>$ 1 h&674453&280.6\\
+cond-mat-2003  & 2&0.00&203&204&15.7&204&16.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}31163$& 3&0.02&${\ge}629$&\color{gray}\num{6.3e+06}&\color{gray}$>$ 1 h&\color{gray}\num{6.1e+06}&\color{gray}$>$ 1 h\\
+\hspace*{0.2em}\color{gray}$|E|{=}120029$& 4&0.12&${\ge}2605$&\color{gray}\num{1.9e+06}&\color{gray}$>$ 1 h&\color{gray}\num{1.8e+06}&\color{gray}$>$ 1 h\\
+cond-mat-2005  & 2&0.00&279&279&26.8&279&26.4\\
+\hspace*{0.2em}\color{gray}$|V|{=}40421$& 3&0.03&${\ge}1060$&\color{gray}\num{2.0e+06}&\color{gray}$>$ 1 h&\color{gray}\num{1.9e+06}&\color{gray}$>$ 1 h\\
+\hspace*{0.2em}\color{gray}$|E|{=}175691$& 4&0.16&${\ge}4185$&\color{gray}562816&\color{gray}$>$ 1 h&\color{gray}585596&\color{gray}$>$ 1 h\\
+dolphins  & 2&0.32&14&14&0.0&14&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}62$& 3&0.59&30&30&0.0&30&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}159$& 4&0.77&40&40&0.0&40&0.0\\
+email  & 2&0.09&72&72&0.0&72&0.1\\
+\hspace*{0.2em}\color{gray}$|V|{=}1133$& 3&0.45&233&19031&0.3&19031&0.4\\
+\hspace*{0.2em}\color{gray}$|E|{=}5451$& 4&0.86&654&6854&0.3&6676&0.4\\
+football  & 2&0.45&17&147&0.0&145&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}115$& 3&0.95&69&70&0.0&70&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}613$& 4&1.00&115&115&0.0&115&0.0\\
+hep-th  & 2&0.00&51&51&1.0&51&1.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}8361$& 3&0.01&125&239&1.2&176&1.3\\
+\hspace*{0.2em}\color{gray}$|E|{=}15751$& 4&0.04&347&158164&21.6&23714&4.7\\
+jazz  & 2&0.69&103&107&0.0&107&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}198$& 3&0.95&174&174&0.0&174&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}2742$& 4&0.99&192&192&0.0&192&0.0\\
+karate  & 2&0.61&18&18&0.0&18&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}34$& 3&0.86&25&25&0.0&25&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}78$& 4&0.99&33&33&0.0&33&0.0\\
+lesmis  & 2&0.43&37&37&0.0&37&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}77$& 3&0.85&58&58&0.0&58&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}254$& 4&0.99&75&75&0.0&75&0.0\\
+netscience  & 2&0.01&35&35&0.0&35&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}1589$& 3&0.01&54&54&0.0&54&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}2742$& 4&0.02&85&85&0.0&85&0.0\\
+PGPgiantcompo  & 2&0.00&206&206&1.7&206&1.7\\
+\hspace*{0.2em}\color{gray}$|V|{=}10680$& 3&0.02&423&843&2.6&841&2.7\\
+\hspace*{0.2em}\color{gray}$|E|{=}24316$& 4&0.07&1161&1161&5.9&1161&6.0\\
+polblogs  & 2&0.27&352&352&0.1&352&0.1\\
+\hspace*{0.2em}\color{gray}$|V|{=}1490$& 3&0.58&776&2210&1.2&2177&1.2\\
+\hspace*{0.2em}\color{gray}$|E|{=}16715$& 4&0.66&1127&1537&2.0&1166&1.9\\
+polbooks  & 2&0.37&28&28&0.0&28&0.0\\
+\hspace*{0.2em}\color{gray}$|V|{=}105$& 3&0.64&54&54&0.0&54&0.0\\
+\hspace*{0.2em}\color{gray}$|E|{=}441$& 4&0.86&68&68&0.0&68&0.0\\
+power  & 2&0.00&20&20&0.4&20&0.4\\
+\hspace*{0.2em}\color{gray}$|V|{=}4941$& 3&0.00&30&30&0.4&30&0.4\\
+\hspace*{0.2em}\color{gray}$|E|{=}6594$& 4&0.01&61&61&0.4&61&0.4\\
     \bottomrule
 \end{tabular}
 \caption{Results for smaller DIMACS clustering graphs.}\label{table:clustering}
@@ -724,7 +858,24 @@ $k$-clique and $k$-club numbers are the same.
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} &
     \multicolumn{1}{c}{Nodes} & \multicolumn{1}{c}{Time} \\
     \midrule
-    \inputhaxx{gen-table-parallel}
+astro-ph  & 2&0.01&361&362&5.0 &17227&4.9 \\
+\hspace*{0.2em}\color{gray}$|V|{=}16706$& 3&0.10&1553&1560&12.5 &32614&9.5 \\
+\hspace*{0.2em}\color{gray}$|E|{=}121251$& 4&0.35&${\ge}4125$&\color{gray}\num{1.1e+06}&\color{gray}$>$ 1 h&\color{gray}\num{3.1e+08}&\color{gray}$>$ 12 h\\
+cond-mat  & 2&0.00&108&108&4.5 &16833&4.5 \\
+\hspace*{0.2em}\color{gray}$|V|{=}16726$& 3&0.01&250&844&5.6 &17933&5.4 \\
+\hspace*{0.2em}\color{gray}$|E|{=}47594$& 4&0.05&720&674453&280.6 &22604&8.7 \\
+cond-mat-2003  & 2&0.00&203&204&16.0 &31424&14.8 \\
+\hspace*{0.2em}\color{gray}$|V|{=}31163$& 3&0.02&634&\color{gray}\num{6.1e+06}&\color{gray}$>$ 1 h&\num{3.4e+08}&8131.3 \\
+\hspace*{0.2em}\color{gray}$|E|{=}120029$& 4&0.12&${\ge}2606$&\color{gray}\num{1.8e+06}&\color{gray}$>$ 1 h&\color{gray}\num{5.1e+08}&\color{gray}$>$ 12 h\\
+cond-mat-2005  & 2&0.00&279&279&26.4 &40701&24.2 \\
+\hspace*{0.2em}\color{gray}$|V|{=}40421$& 3&0.03&1060&\color{gray}\num{1.9e+06}&\color{gray}$>$ 1 h&\num{1.0e+09}&69836.7 \\
+\hspace*{0.2em}\color{gray}$|E|{=}175691$& 4&0.16&${\ge}4271$&\color{gray}585596&\color{gray}$>$ 1 h&\color{gray}\num{1.2e+08}&\color{gray}$>$ 12 h\\
+vibrobox  & 2&0.02&121&302&3.5 &12699&3.4 \\
+\hspace*{0.2em}\color{gray}$|V|{=}12328$& 3&0.08&408&1984&10.0 &17246&6.5 \\
+\hspace*{0.2em}\color{gray}$|E|{=}165250$& 4&0.26&${\ge}1107$&\color{gray}\num{7.4e+06}&\color{gray}$>$ 1 h&\color{gray}\num{1.8e+09}&\color{gray}$>$ 12 h\\
+wing-nodal  & 2&0.01&29&648&3.5 &11580&2.9 \\
+\hspace*{0.2em}\color{gray}$|V|{=}10937$& 3&0.02&54&13039&15.2 &23709&17.9 \\
+\hspace*{0.2em}\color{gray}$|E|{=}75488$& 4&0.04&114&\num{6.0e+07}&1908.9 &113619&18.4 \\
     \bottomrule
 \end{tabular}
 \caption{Experimental results for multi-threaded search on harder instances, using 20 threads. For
@@ -776,18 +927,18 @@ stealing for combinatorial search problems
 
 \subsection{Random Graphs}
 
-\begin{figure}[t]
+\begin{figure}[h!] % try to keep this immediately above the next figure
     \centering
-    \input{gen-graph-omega}
+    \includegraphics{gen-graph-omega.pdf}
     \caption{Values of $\tilde{\omega}_k$ for random graphs $G(200, p)$, with varying edge probabilities.
         We see that even for very low edge probabilities, a maximum $k$-clique
     quickly covers the entire graph when $k > 1$.}
     \label{figure:graph-omega}
 \end{figure}
 
-\begin{figure}[t]
+\begin{figure}[h!] % try to keep this immediately below the previous figure
     \centering
-    \input{gen-graph-nodes}
+    \includegraphics{gen-graph-nodes.pdf}
     \caption{Search space size for random graphs $G(200, p)^k$, with varying edge probabilities. We see that
         $4$-clique is easier than $3$-clique in practice, which in turn is easier than $2$-clique. (The
         complexity peak for maximum clique occurs at around edge probability 0.9, and requires
@@ -800,6 +951,24 @@ pair of vertices with probability $p$, chosen independently. We now investigate 
 maximum $k$-clique in such graphs, and the complexity of finding it. In each case, we use an average
 over 100 samples for every point.  We do not use the domination rule for these experiments: the
 probability of random graphs having dominating vertices is very low.
+
+\begin{figure}[h!] % try to keep this immediately above the next figure
+    \centering
+    \includegraphics{gen-graph-omega-2.pdf}
+    \caption{The size of a maximum $2$-clique in random graphs $G(n, p)$ with varying edge
+        probabilities, and different values of $n$. For $G(50, p)$, a $2$-clique has size average 50
+    from $p = 0.42$ onwards.}
+    \label{figure:graph-omega-2}
+\end{figure}
+
+\begin{figure}[h!] % try to keep this immediately below the previous figure
+    \centering
+    \includegraphics{gen-graph-nodes-2.pdf}
+    \caption{The search space size for the maximum $2$-clique problem in random graphs $G(n, p)$
+        with varying edge probabilities, and for different values of $n$. As $n$ increases, the
+    complexity peak grows and moves slowly to the left.}
+    \label{figure:graph-nodes-2}
+\end{figure}
 
 In \cref{figure:graph-omega} we illustrate the average value of $\tilde{\omega}_k$ in $G(200,
 p)$ for different values of $k$, and a range of values of $p$ for the $x$-axis. We see that even for
@@ -815,24 +984,6 @@ around edge probability 0.9, and is two orders of magnitude larger.
 In \cref{figure:graph-omega-2,figure:graph-nodes-2} we show the effect of
 changing $n$ and fixing $k = 2$. As $n$ increases from 50 to 200, the complexity peak becomes much
 more pronounced, and shifts slightly towards the left (lower edge probabilities).
-
-\begin{figure}[t]
-    \centering
-    \input{gen-graph-omega-2}
-    \caption{The size of a maximum $2$-clique in random graphs $G(n, p)$ with varying edge
-        probabilities, and different values of $n$. For $G(50, p)$, a $2$-clique has size average 50
-    from $p = 0.42$ onwards.}
-    \label{figure:graph-omega-2}
-\end{figure}
-
-\begin{figure}[t]
-    \centering
-    \input{gen-graph-nodes-2}
-    \caption{The search space size for the maximum $2$-clique problem in random graphs $G(n, p)$
-        with varying edge probabilities, and for different values of $n$. As $n$ increases, the
-    complexity peak grows and moves slowly to the left.}
-    \label{figure:graph-nodes-2}
-\end{figure}
 
 \section{Conclusion}
 

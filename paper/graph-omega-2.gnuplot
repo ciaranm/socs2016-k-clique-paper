@@ -1,6 +1,6 @@
 # vim: set et ft=gnuplot sw=4 :
 
-set terminal tikz color size 3.3in,2.2in font '\scriptsize'
+set terminal tikz standalone color size 3.3in,2.4in font '\scriptsize' preamble '\usepackage{times,microtype,amssymb,amsmath}'
 set output "gen-graph-omega-2.tex"
 
 set xlabel "Edge Probability"
