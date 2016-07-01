@@ -38,13 +38,12 @@
 \definecolor{uofgpillarbox}{rgb}{0.701961, 0.047059, 0}
 \definecolor{uofglavendar}{rgb}{0.356863, 0.301961, 0.580392}
 
-\tikzset{vertex/.style={draw, circle, inner sep=0pt, minimum size=0.5cm, font=\small\bfseries}}
+\tikzset{vertex/.style={draw, circle, inner sep=3pt, minimum size=0.5cm, font=\small\bfseries}}
 \tikzset{notvertex/.style={vertex, color=white, text=black}}
 \tikzset{plainvertex/.style={vertex}}
-\tikzset{vertexc1/.style={vertex, fill=uofgburgundy, text=white}}
-\tikzset{vertexc2/.style={vertex, fill=uofgsandstone, text=white}}
-\tikzset{vertexc3/.style={vertex, fill=uofgforest, text=white}}
-\tikzset{vertexc4/.style={vertex, fill=uofgheather, text=white}}
+\tikzset{selectedvertex/.style={vertex, fill=uofgcobalt}}
+\tikzset{selectedvertex2/.style={vertex, fill=uofglawn}}
+\tikzset{redvertex/.style={vertex, fill=uofgpillarbox}}
 \tikzset{edge/.style={color=black!50!white}}
 \tikzset{bedge/.style={ultra thick}}
 
@@ -178,14 +177,95 @@ Prosser}
     \end{frame}
 }
 
-
 \begin{frame}{Maximum Clique}
+    \centering
+    \begin{tikzpicture}
+        \newcount \c
+        \foreach \n in {1, ..., 8}{
+            \c=\n \advance\c by -1 \multiply\c by -360 \divide\c by 8 \advance\c by 90 \advance\c by 22.5
+            \ifthenelse{\n = 1 \OR \n = 2 \OR \n = 5 \OR \n = 8}{
+                \node[selectedvertex] (N\n) at (\the\c:2) {\n};
+            }{
+                \node[plainvertex] (N\n) at (\the\c:2) {\n};
+            }
+        }
+
+        \draw [edge] (N2) -- (N3);
+        \draw [edge] (N2) -- (N4);
+        \draw [edge] (N3) -- (N7);
+        \draw [edge] (N4) -- (N5);
+        \draw [edge] (N5) -- (N6);
+        \draw [edge] (N6) -- (N7);
+
+        \draw [bedge] (N1) -- (N2);
+        \draw [bedge] (N1) -- (N5);
+        \draw [bedge] (N1) -- (N8);
+        \draw [bedge] (N2) -- (N5);
+        \draw [bedge] (N2) -- (N8);
+        \draw [bedge] (N5) -- (N8);
+    \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{Maximum $k$-Clique}
+    \centering
+    \begin{tikzpicture}
+        \newcount \c
+        \foreach \n in {1, ..., 8}{
+            \c=\n \advance\c by -1 \multiply\c by -360 \divide\c by 8 \advance\c by 90 \advance\c by 22.5
+            \ifthenelse{\n = 1 \OR \n = 2 \OR \n = 3 \OR \n = 4 \OR \n = 5 \OR \n = 6 \OR \n = 8}{
+                \node[selectedvertex] (N\n) at (\the\c:2) {\n};
+            }{
+                \node[plainvertex] (N\n) at (\the\c:2) {\n};
+            }
+        }
+
+        \draw [edge] (N3) -- (N7);
+        \draw [edge] (N6) -- (N7);
+
+        \draw [bedge] (N1) -- (N2);
+        \draw [bedge] (N1) -- (N5);
+        \draw [bedge] (N1) -- (N8);
+        \draw [bedge] (N2) -- (N5);
+        \draw [bedge] (N2) -- (N8);
+        \draw [bedge] (N5) -- (N8);
+        \draw [bedge] (N2) -- (N3);
+        \draw [bedge] (N2) -- (N4);
+        \draw [bedge] (N4) -- (N5);
+        \draw [bedge] (N5) -- (N6);
+    \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{Maximum $k$-Club}
+    \centering
+    \begin{tikzpicture}
+        \newcount \c
+        \foreach \n in {1, ..., 8}{
+            \c=\n \advance\c by -1 \multiply\c by -360 \divide\c by 8 \advance\c by 90 \advance\c by 22.5
+            \ifthenelse{\n = 1 \OR \n = 2 \OR \n = 4 \OR \n = 5 \OR \n = 8}{
+                \node[selectedvertex] (N\n) at (\the\c:2) {\n};
+            }{
+                \ifthenelse{\n = 3 \OR \n = 6}{
+                    \node[redvertex] (N\n) at (\the\c:2) {\n};
+                }{
+                    \node[plainvertex] (N\n) at (\the\c:2) {\n};
+                }
+            }
+        }
+
+        \draw [edge] (N3) -- (N7);
+        \draw [edge] (N6) -- (N7);
+
+        \draw [bedge] (N1) -- (N2);
+        \draw [bedge] (N1) -- (N5);
+        \draw [bedge] (N1) -- (N8);
+        \draw [bedge] (N2) -- (N5);
+        \draw [bedge] (N2) -- (N8);
+        \draw [bedge] (N5) -- (N8);
+        \draw [bedge] (N2) -- (N3);
+        \draw [bedge] (N2) -- (N4);
+        \draw [bedge] (N4) -- (N5);
+        \draw [bedge] (N5) -- (N6);
+    \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{Existing Work}
@@ -203,6 +283,72 @@ Prosser}
 \end{frame}
 
 \begin{frame}{Reducing $k$-Clique to Clique}
+    \centering
+    \begin{tikzpicture}
+        \begin{scope}
+            \newcount \c
+            \foreach \n in {1, ..., 8}{
+                \c=\n \advance\c by -1 \multiply\c by -360 \divide\c by 8 \advance\c by 90 \advance\c by 22.5
+                \ifthenelse{\n = 1 \OR \n = 2 \OR \n = 3 \OR \n = 4 \OR \n = 5 \OR \n = 6 \OR \n = 8}{
+                    \node[selectedvertex] (N\n) at (\the\c:2) {\n};
+                }{
+                    \node[plainvertex] (N\n) at (\the\c:2) {\n};
+                }
+            }
+
+            \draw [edge] (N3) -- (N7);
+            \draw [edge] (N6) -- (N7);
+
+            \draw [bedge] (N1) -- (N2);
+            \draw [bedge] (N1) -- (N5);
+            \draw [bedge] (N1) -- (N8);
+            \draw [bedge] (N2) -- (N5);
+            \draw [bedge] (N2) -- (N8);
+            \draw [bedge] (N5) -- (N8);
+            \draw [bedge] (N2) -- (N3);
+            \draw [bedge] (N2) -- (N4);
+            \draw [bedge] (N4) -- (N5);
+            \draw [bedge] (N5) -- (N6);
+        \end{scope}
+        \begin{scope}[xshift=6cm]
+            \newcount \c
+            \foreach \n in {1, ..., 8}{
+                \c=\n \advance\c by -1 \multiply\c by -360 \divide\c by 8 \advance\c by 90 \advance\c by 22.5
+                \ifthenelse{\n = 1 \OR \n = 2 \OR \n = 3 \OR \n = 4 \OR \n = 5 \OR \n = 6 \OR \n = 8}{
+                    \node[selectedvertex] (N\n) at (\the\c:2) {\n};
+                }{
+                    \node[plainvertex] (N\n) at (\the\c:2) {\n};
+                }
+            }
+
+            \draw [edge] (N2) -- (N7);
+            \draw [edge] (N3) -- (N7);
+            \draw [edge] (N5) -- (N7);
+            \draw [edge] (N6) -- (N7);
+
+            \draw [bedge] (N1) -- (N2);
+            \draw [bedge] (N1) -- (N3);
+            \draw [bedge] (N1) -- (N4);
+            \draw [bedge] (N1) -- (N5);
+            \draw [bedge] (N1) -- (N6);
+            \draw [bedge] (N1) -- (N8);
+            \draw [bedge] (N2) -- (N3);
+            \draw [bedge] (N2) -- (N4);
+            \draw [bedge] (N2) -- (N5);
+            \draw [bedge] (N2) -- (N6);
+            \draw [bedge] (N2) -- (N8);
+            \draw [bedge] (N3) -- (N4);
+            \draw [bedge] (N3) -- (N5);
+            \draw [bedge] (N3) -- (N6);
+            \draw [bedge] (N3) -- (N8);
+            \draw [bedge] (N4) -- (N5);
+            \draw [bedge] (N4) -- (N6);
+            \draw [bedge] (N4) -- (N8);
+            \draw [bedge] (N5) -- (N6);
+            \draw [bedge] (N5) -- (N8);
+            \draw [bedge] (N6) -- (N8);
+        \end{scope}
+    \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{But Is This Practical?}
@@ -252,6 +398,29 @@ Prosser}
 \end{frame}
 
 \begin{frame}{But We Can Do Better}
+    \centering
+    \begin{tikzpicture}
+        \begin{scope}
+            \node[selectedvertex] (Na) at (0, 2) {$a$};
+            \node[selectedvertex2] (Nb) at (6, 2) {$b$};
+
+            \node[plainvertex] (N1) at (3, 4) {$1$};
+            \node[plainvertex] (N2) at (3, 3) {$2$};
+            \node[plainvertex] (N3) at (3, 2) {$3$};
+            \node[plainvertex] (N4) at (3, 1) {$4$};
+            \node[plainvertex] (N5) at (3, 0) {$5$};
+
+            \draw [edge] (Na) -- (N1);
+            \draw [edge] (Na) -- (N2);
+            \draw [edge] (Na) -- (N3);
+            \draw [edge] (Na) -- (N4);
+            \draw [edge] (Na) -- (N5);
+
+            \draw [edge] (Nb) -- (N1);
+            \draw [edge] (Nb) -- (N3);
+            \draw [edge] (Nb) -- (N5);
+        \end{scope}
+    \end{tikzpicture}
 \end{frame}
 
 \begin{frame}{Better Results!}
