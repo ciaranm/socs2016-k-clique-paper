@@ -373,25 +373,29 @@ Prosser}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{The Results}
+\begin{frame}{The Results ($k \in \{2, 3, 4\}$)}
     \begin{itemize}
-        \item Erd\H{o}s collaboration graphs (up to 6,927 vertices, 11,850 edges):
+        \item Erd\H{o}s collaboration graphs:
             \begin{itemize}
+                \item $|V| \le 6,927$, $|E| \le 11,850$, $D(G^k) \le 0.57$ (or $= 1$).
                 \item 16 take $<1s$, 2 take $<12s$, 3 $>1h$.
             \end{itemize}
 
-        \item DIMACS 2 Clique Graphs (up to 500 vertices, 46,627 edges):
+        \item DIMACS 2 Clique Graphs with diameter $> 2$:
             \begin{itemize}
+                \item $|V| \le 500$, $|E| \le 46,627$, $D(G^k) \le 0.87$ (or $= 1$)
                 \item 22 take $<1s$, 2 take $>1h$.
             \end{itemize}
 
-        \item DIMACS 10 Partitioning Graphs (smallest 20, up to 36,519 vertices, 1,007,284 edges):
+        \item DIMACS 10 Partitioning Graphs (smallest 20):
             \begin{itemize}
+                \item $|V| \le 36,519$, $|E| \le 1,007,284$, $D(G^k) \le 0.67$.
                 \item 2 take $>1h$, most take well under a minute.
             \end{itemize}
 
-        \item DIMACS 10 Clustering Graphs (smallest 20, up to 40,421 vertices, 175,691 edges):
+        \item DIMACS 10 Clustering Graphs (smallest 20):
             \begin{itemize}
+                \item $|V| \le 40,421$, $|E| \le 175,691$, $D(G^k) \le 0.99$.
                 \item 7 take $>1h$, most take well under a minute.
             \end{itemize}
     \end{itemize}
