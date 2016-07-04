@@ -466,8 +466,18 @@ Prosser}
             \begin{itemize}
                 \item Work stealing strategies really make a huge difference (often more so than
                     load balance)!
+            \end{itemize}
+        \item In this paper:
+            \begin{itemize}
+                \item Dynamic work splitting, starting at the top, and working downwards.
                 \item Use parallelism to steal early, where value ordering heuristics are
                     weakest---a bit like discrepancy search or restarts.
+                \item Reproducible.
+                \item Guarantees no (exponential) slowdown.
+            \end{itemize}
+        \item Conspicuously missing from this paper:
+            \begin{itemize}
+                \item Parallel $G^k$ construction.
             \end{itemize}
     \end{itemize}
 \end{frame}
@@ -525,5 +535,4 @@ Prosser}
 \end{frame}
 
 \end{document}
-
 
