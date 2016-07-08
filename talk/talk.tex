@@ -361,6 +361,11 @@ Prosser}
             \begin{itemize}
                 \item $\omega(\operatorname{G}(500, 0.9))$ can't be solved in a CPU-decade.
             \end{itemize}
+        \item It's well known in the CP community that reduction to clique is a bad way of solving
+            things.
+            \begin{itemize}
+                \item (This is not necessarily true, but it's well known\ldots)
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -460,7 +465,6 @@ Prosser}
 \end{frame}
 
 \begin{frame}{What About Parallel Search?}
-
     \begin{itemize}
         \item Active research topic for maximum clique.
             \begin{itemize}
@@ -472,12 +476,6 @@ Prosser}
                 \item Dynamic work splitting, starting at the top, and working downwards.
                 \item Use parallelism to steal early, where value ordering heuristics are
                     weakest---a bit like discrepancy search or restarts.
-                \item Reproducible.
-                \item Guarantees no (exponential) slowdown.
-            \end{itemize}
-        \item Conspicuously missing from this paper:
-            \begin{itemize}
-                \item Parallel $G^k$ construction.
             \end{itemize}
     \end{itemize}
 \end{frame}
@@ -496,13 +494,35 @@ Prosser}
     \end{itemize}
 \end{frame}
 
+\begin{frame}{Slide of Blatant Propaganda}
+    \begin{itemize}
+        \item This technique is the only known practical way of getting:
+            \begin{itemize}
+                \item Reproducible runtimes.
+                \item Guarantees of no (exponential) slowdown over sequential, or when adding cores.
+                \item Decent work distribution.
+                \item Respectable speedups in practice.
+            \end{itemize}
+        \item I personally think these properties are all critical for practical multi-core parallel
+            search.
+    \end{itemize}
+\end{frame}
+
 \begin{frame}{What About Random Graphs?}
     \centering
     \input{gen-graph-nodes}
 \end{frame}
 
-\begin{frame}{Conclusion}
+\begin{frame}{Conspicuously Missing From This Paper}
+    \begin{itemize}
+        \item Parallel $G^k$ construction.
+        \item Predicting $G(n, p)^k$ on random graphs.
+        \item So just why are $G^k$ graphs so easy to solve, anyway?
+    \end{itemize}
+\end{frame}
 
+
+\begin{frame}{Conclusion}
     \begin{itemize}
         \item There are many clique relaxations (density-based, degree-based, distance-based,
             \ldots). It's often not clear which you'd want in practice.
