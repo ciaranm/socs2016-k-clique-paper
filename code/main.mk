@@ -15,6 +15,7 @@ SOURCES := \
     bit_graph.cc \
     graph.cc \
     degree_sort.cc \
+    mw_order.cc \
     dimacs.cc \
     net.cc \
     metis.cc \

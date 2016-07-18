@@ -36,6 +36,9 @@ struct MaxCliqueParams
 
     /// Use lazy global domination?
     bool lgd = false;
+
+    /// Use mw ordering?
+    bool mw_order = false;
 };
 
 #endif

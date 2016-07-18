@@ -108,6 +108,7 @@ auto main(int argc, char * argv[]) -> int
             ("power",              po::value<int>(), "Raise the graph to this power (to solve s-clique)")
             ("format",             po::value<std::string>(), "Specify the format of the input")
             ("lgd",                                  "Use lazy global domination")
+            ("mw",                                   "Use minimum width ordering")
             ("parallel-search",                      "Use threaded search")
             ;
 
@@ -158,6 +159,7 @@ auto main(int argc, char * argv[]) -> int
             MaxCliqueParams params;
 
             params.lgd = options_vars.count("lgd");
+            params.mw_order = options_vars.count("mw");
 
             if (options_vars.count("power"))
                 params.power = options_vars["power"].as<int>();

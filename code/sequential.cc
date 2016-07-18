@@ -5,6 +5,7 @@
 #include "max_clique_params.hh"
 #include "max_clique_result.hh"
 #include "degree_sort.hh"
+#include "mw_order.hh"
 #include "template_voodoo.hh"
 
 #include <algorithm>
@@ -33,7 +34,11 @@ namespace
         {
             // populate our order with every vertex initially
             std::iota(order.begin(), order.end(), 0);
-            degree_sort(g, order, false);
+
+            if (params.mw_order)
+                mw_order(g, order, false);
+            else
+                degree_sort(g, order, false);
 
             // re-encode graph as a bit graph
             graph.resize(g.size());
